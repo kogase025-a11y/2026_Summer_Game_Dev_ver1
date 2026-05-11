@@ -1,0 +1,5 @@
+App Init start
+DxLib_Init ok
+reset fileMng
+reset sceneMana
+Init end
