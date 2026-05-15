@@ -20,22 +20,59 @@ SceneGame::~SceneGame() = default;
 
 void SceneGame::Update()
 {
-	// ESCキーでポーズの切り替え
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_ESCAPE))
+	auto& input = InputManager::GetInstance();
+
+	// ESCキー または コントローラのSTARTボタン でポーズの切り替え
+	if (input.IsTrgDown(KEY_INPUT_ESCAPE) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
 		isPause_ = !isPause_;
+		if (isPause_) pauseCursor_ = 0; // ポーズを開いた時にカーソルをリセット
 	}
 
-	// ポーズ中の場合はゲームの更新をストップしてメニュー操作のみ受け付ける
+	// ポーズ画面中の処理
 	if (isPause_)
 	{
-		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_RETURN))
+		// 上下入力の判定(キーボード & パッド)
+		const int padState = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+		
+		bool upPressed = input.IsTrgDown(KEY_INPUT_UP) || (padState & PAD_INPUT_UP);
+		bool downPressed = input.IsTrgDown(KEY_INPUT_DOWN) || (padState & PAD_INPUT_DOWN);
+		
+		// 1フレームだけ反応させるために前回入力をチェックする簡易処理
+		static int prevPadState = 0;
+		if (padState & PAD_INPUT_UP && (prevPadState & PAD_INPUT_UP)) upPressed = false;
+		if (padState & PAD_INPUT_DOWN && (prevPadState & PAD_INPUT_DOWN)) downPressed = false;
+		prevPadState = padState;
+
+		if (upPressed)
 		{
-			EndScene(SceneID::TITLE); // Enterでタイトルへ戻る
+			pauseCursor_--;
+			if (pauseCursor_ < 0) pauseCursor_ = 2;
 		}
-		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_Q))
+		if (downPressed)
 		{
-			EndScene(SceneID::EXIT); // Qでゲーム終了
+			pauseCursor_++;
+			if (pauseCursor_ > 2) pauseCursor_ = 0;
+		}
+
+		// ENTERキー または Bボタン(RIGHT), Aボタン(DOWN) で決定
+		if (input.IsTrgDown(KEY_INPUT_RETURN) ||
+			input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT) ||
+			input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN))
+		{
+			if (pauseCursor_ == 0)
+			{
+				isPause_ = false; // 再開
+			}
+			else if (pauseCursor_ == 1)
+			{
+				EndScene(SceneID::TITLE); // タイトルへ
+			}
+			else if (pauseCursor_ == 2)
+			{
+				EndScene(SceneID::EXIT); // 終了
+			}
 		}
 		return;
 	}
@@ -91,10 +128,16 @@ void SceneGame::Draw()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 		// メニューの枠と文字を描画
-		DrawBox(kScreenWidth / 2 - 200, 400, kScreenWidth / 2 + 200, 600, GetColor(50, 50, 150), TRUE);
+		DrawBox(kScreenWidth / 2 - 200, 400, kScreenWidth / 2 + 200, 650, GetColor(50, 50, 150), TRUE);
 		DrawString(kScreenWidth / 2 - 80, 440, "PAUSE MENU", GetColor(255, 255, 255));
-		DrawString(kScreenWidth / 2 - 120, 490, "Press Enter to TITLE", GetColor(200, 200, 200));
-		DrawString(kScreenWidth / 2 - 120, 530, "Press ESC to RESUME", GetColor(200, 200, 200));
-		DrawString(kScreenWidth / 2 - 120, 570, "Press Q to QUIT GAME", GetColor(200, 200, 200));
+
+		// カーソルの位置に応じて色を変える
+		int color0 = (pauseCursor_ == 0) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
+		int color1 = (pauseCursor_ == 1) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
+		int color2 = (pauseCursor_ == 2) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
+
+		DrawString(kScreenWidth / 2 - 120, 500, (pauseCursor_ == 0 ? "> RESUME" : "  RESUME"), color0);
+		DrawString(kScreenWidth / 2 - 120, 540, (pauseCursor_ == 1 ? "> TITLE" : "  TITLE"), color1);
+		DrawString(kScreenWidth / 2 - 120, 580, (pauseCursor_ == 2 ? "> QUIT GAME" : "  QUIT GAME"), color2);
 	}
 }

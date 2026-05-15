@@ -1,5 +1,6 @@
 #include "SceneTitle.h"
 #include "../Manager/FileManager.h"
+#include "../Input/InputManager.h" // 追加
 
 #include <cstring>
 
@@ -15,8 +16,11 @@ SceneTitle::SceneTitle(FileManager& fileMng)
 
 void SceneTitle::Update()
 {
-	// ENTERでゲーム開始
-	if (CheckHitKey(KEY_INPUT_RETURN) != 0)
+	auto& input = InputManager::GetInstance();
+	// ENTER または コントローラのSTARTキーかAボタンでゲーム開始
+	if (input.IsTrgDown(KEY_INPUT_RETURN) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
 		EndScene(SceneID::GAME);
 	}

@@ -45,6 +45,7 @@ public:
 		DOWN,
 		R_TRIGGER,
 		L_TRIGGER,
+		START, // ’Ç‰Á
 		MAX
 	};
 

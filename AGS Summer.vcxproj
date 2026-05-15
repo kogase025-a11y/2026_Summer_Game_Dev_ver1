@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Util\AsoUtility.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -144,9 +145,11 @@
     <ClCompile Include="Scene\SceneTitle.cpp" />
     <ClCompile Include="Stage\Stage.cpp" />
     <ClCompile Include="Util\Fade.cpp" />
+    <ClCompile Include="Util\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Util\AsoUtility.h" />
     <ClInclude Include="FPS\Fps.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Manager\FileManager.h" />
@@ -160,9 +163,11 @@
     <ClInclude Include="Scene\SceneGame.h" />
     <ClInclude Include="Scene\SceneSuper.h" />
     <ClInclude Include="Scene\SceneTitle.h" />
+    <ClInclude Include="Stage\Stage.h" />
     <ClInclude Include="Util\Fade.h" />
     <ClInclude Include="Util\Rect.h" />
     <ClInclude Include="Util\Vector2.h" />
+    <ClInclude Include="Util\Vector2F.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Image\GameClear.PNG" />

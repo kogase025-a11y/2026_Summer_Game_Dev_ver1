@@ -8,6 +8,8 @@ Stage::Stage()
     , stepTopY_(640.0f)
     , goalX_(4700.0f)
     , stageWidth_(5000.0f)
+    , puddleStartX_(800.0f)
+    , puddleEndX_(1200.0f)
 {
 }
 
@@ -20,6 +22,11 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
     // °‚Ì•`‰æ
     const int groundY = static_cast<int>(groundY_);
     DrawBox(0, groundY, screenWidth, screenHeight, GetColor(60, 170, 60), TRUE);
+
+    // …‚½‚Ü‚è‚Ì•`‰æ(°‚Æd‚È‚é‚æ‚¤‚ÉÂF‚Å•`‰æ)
+    const int puddleLeft = static_cast<int>(puddleStartX_ - cameraX);
+    const int puddleRight = static_cast<int>(puddleEndX_ - cameraX);
+    DrawBox(puddleLeft, groundY, puddleRight, groundY + 20, GetColor(50, 50, 200), TRUE);
 
     // ’i·‚Ì•`‰æ
     const int stepLeft = static_cast<int>(stepStartX_ - cameraX);
@@ -49,3 +56,6 @@ float Stage::GetGroundYAtX(float x) const
 
 float Stage::GetGoalX() const { return goalX_; }
 float Stage::GetStageWidth() const { return stageWidth_; }
+
+float Stage::GetPuddleStartX() const { return puddleStartX_; }
+float Stage::GetPuddleEndX() const { return puddleEndX_; }

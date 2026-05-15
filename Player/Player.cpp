@@ -8,6 +8,9 @@
 Player::Player(Stage* stage, FileManager& fileMng) : stage_(stage), fileMng_(fileMng), sceneGame_(nullptr) {
 	
 	 particleTex = fileMng_.LoadImageFM("Image/ToiletPaper.PNG");
+	 wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaperYogore.PNG");
+	 wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaperYogore2.PNG");
+	 wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaperYogore3.PNG");
 
 }
 
@@ -21,8 +24,12 @@ bool Player::SystemInit(void)
 	// システム初期化時にプレイヤー状態を初期化
 	positionX_ = 200.0f;
 	positionY_ = stage_->GetGroundY();
+	velocityX_ = 0.0f;
 	velocityY_ = 0.0f;
 	onGround_ = true;
+	jumpTimer_ = 0;
+	dirtLevel_ = 0;
+	wasInPuddle_ = false;
 	stateName_ = "Idle";
 	return true;
 }
@@ -32,8 +39,12 @@ void Player::GameInit(void)
 	// ゲーム開始時のリセット
 	positionX_ = 300.0f;
 	positionY_ = stage_->GetGroundY();
+	velocityX_ = 0.0f;
 	velocityY_ = 0.0f;
 	onGround_ = true;
+	jumpTimer_ = 0;
+	dirtLevel_ = 0;
+	wasInPuddle_ = false;
 	stateName_ = "Idle";
 }
 
@@ -55,78 +66,37 @@ bool Player::Release(void)
 
 void Player::Update(const InputManager& input)
 {
-	// プレイヤー当たり判定の半幅
-	const float playerHalfWidth = static_cast<float>(PlayerWidth) / 2.0f;
+	ProcessMove(input);
 
-	// 現在のX座標が通常床か段差上かを返す
-	const auto getGroundYAtX = [this](float x)
-	{
-		return stage_->GetGroundYAtX(x);
-	};
-
-	// 左右入力（右=+1, 左=-1）
-	const float moveInput =
-		(input.IsNew(KEY_INPUT_RIGHT) ? 1.0f : 0.0f) -
-		(input.IsNew(KEY_INPUT_LEFT) ? 1.0f : 0.0f);
-
-	// 水平方向の移動
-	const float prevX = positionX_;
-	positionX_ += moveInput * moveSpeed_;
-
-	// 画面（ステージ）外に出ないようにクランプ
-	const float clampedStageWidth = (std::max)(0.0f, stage_->GetStageWidth());
-	const float minX = playerHalfWidth;
-	const float maxX = (std::max)(minX, clampedStageWidth - playerHalfWidth);
-	positionX_ = (std::max)(minX, (std::min)(positionX_, maxX));
-
-	// 段差より下にいる時だけ側面衝突を有効にする
-	const float stepTopY = stage_->GetStepTopY();
-	const float stepStartX = stage_->GetStepStartX();
-	const float stepEndX = stage_->GetStepEndX();
-	const bool isBelowStepTop = (positionY_ > stepTopY + 0.5f);
-	if (isBelowStepTop)
-	{
-		if ((prevX + playerHalfWidth <= stepStartX) && (positionX_ + playerHalfWidth > stepStartX))
-		{
-			positionX_ = stepStartX - playerHalfWidth;
-		}
-		else if ((prevX - playerHalfWidth >= stepEndX) && (positionX_ - playerHalfWidth < stepEndX))
-		{
-			positionX_ = stepEndX + playerHalfWidth;
-		}
-	}
-
-	// ジャンプ開始
-	const bool jumpPressed = input.IsTrgDown(KEY_INPUT_SPACE);
-	if (jumpPressed && onGround_)
-	{
-		velocityY_ = -jumpSpeed_;
-		onGround_ = false;
-	}
-
-	// 足元の床高さを取得
-	const float supportGroundY = getGroundYAtX(positionX_);
-
-	// 地形の切り替わりで足場が消えたら落下開始
-	if (onGround_ && (positionY_ < supportGroundY - 0.5f))
-	{
-		onGround_ = false;
-	}
-
-	// 空中時は重力適用
 	if (!onGround_)
 	{
-		velocityY_ += gravity_;
+		AddGravity();
 	}
 
-	// 垂直方向の移動と着地判定
-	positionY_ += velocityY_;
-	if (positionY_ >= supportGroundY)
+	ProcessJump(input);
+
+	Move();
+
+	// 水たまり当たり判定
+	isInPuddle_ = false;
+	const float puddleStart = stage_->GetPuddleStartX();
+	const float puddleEnd = stage_->GetPuddleEndX();
+	// 通常地面に触れており、X座標が水たまりの範囲内なら水たまりと判定
+	if (onGround_ && (positionY_ == stage_->GetGroundY()) && 
+		(positionX_ >= puddleStart) && (positionX_ <= puddleEnd))
 	{
-		positionY_ = supportGroundY;
-		velocityY_ = 0.0f;
-		onGround_ = true;
+		isInPuddle_ = true;
 	}
+
+	// 水たまりに新しく入った瞬間なら汚れ段階をアップ
+	if (isInPuddle_ && !wasInPuddle_)
+	{
+		if (dirtLevel_ < 3)
+		{
+			dirtLevel_++;
+		}
+	}
+	wasInPuddle_ = isInPuddle_;
 
 	// 状態名更新（アニメーション等で利用）
 	if (input.IsTrgDown(KEY_INPUT_X))
@@ -141,7 +111,7 @@ void Player::Update(const InputManager& input)
 	{
 		stateName_ = (velocityY_ < 0.0f) ? "Jump" : "Fall";
 	}
-	else if (moveInput != 0.0f)
+	else if (std::abs(velocityX_) > 0.1f)
 	{
 		stateName_ = "Run";
 	}
@@ -156,6 +126,34 @@ void Player::Draw(float cameraX, int playerGraphHandle) const
 	const int drawX = static_cast<int>(positionX_ - cameraX);
 	const int drawY = static_cast<int>(positionY_);
 
+	// 一度でも水たまりで汚れたら、その状態を維持して描画
+	if (dirtLevel_ > 0)
+	{
+		// 汚れ段階(1?3)に合わせて画像インデックス(0?2)にする
+		int targetIndex = dirtLevel_ - 1;
+		int animIndex = targetIndex;
+		
+		// もし指定した画像が読み込めていなければ、前の状態の画像を代わりに表示する
+		while (animIndex >= 0 && !wetTexs[animIndex])
+		{
+			animIndex--;
+		}
+
+		if (animIndex >= 0 && wetTexs[animIndex])
+		{
+			DrawRotaGraph(drawX, drawY - 24, 1.0, 0.0, wetTexs[animIndex]->GetHandle(), TRUE);
+
+#ifdef _DEBUG
+			// 読み込み失敗が分かるように上部に原因状態を描画
+			if (targetIndex != animIndex) {
+				DrawString(0, 100, "Error: missing Yogore Image!", GetColor(255, 0, 0), TRUE);
+			}
+			DrawFormatString(0, 120, GetColor(255, 255, 255), "DirtLevel: %d  TargetIndex: %d", dirtLevel_, targetIndex);
+#endif
+			return;
+		}
+	}
+
 	if (particleTex)
 	{
 		DrawRotaGraph(drawX, drawY - 24, 1.0, 0.0, particleTex->GetHandle(), TRUE);
@@ -164,22 +162,22 @@ void Player::Draw(float cameraX, int playerGraphHandle) const
 	
 	if (playerGraphHandle >= 0)
 	{
-		DrawRotaGraph(drawX, drawY - (PlayerHeight / 2), 1.0, 0.0, playerGraphHandle, TRUE);
+		DrawRotaGraph(drawX, drawY - (SIZE_Y / 2), 1.0, 0.0, playerGraphHandle, TRUE);
 		return;
 	}
 
-	const int left = drawX - (PlayerWidth / 2);
-	const int right = drawX + (PlayerWidth / 2);
-	const int top = drawY - PlayerHeight;
+	const int left = drawX - (SIZE_X / 2);
+	const int right = drawX + (SIZE_X / 2);
+	const int top = drawY - SIZE_Y;
 	const int bottom = drawY;
 	DrawBox(left, top, right, bottom, GetColor(120, 220, 255), TRUE);
 
 	// 当たり判定デバッグ描画（当たり判定の幅で赤い枠線を描画）
 #ifdef _DEBUG
-	const float playerHalfWidth = static_cast<float>(PlayerWidth) / 2.0f;
+	const float playerHalfWidth = static_cast<float>(SIZE_X) / 2.0f;
 	const int debugLeft = static_cast<int>(positionX_ - playerHalfWidth - cameraX);
 	const int debugRight = static_cast<int>(positionX_ + playerHalfWidth - cameraX);
-	const int debugTop = static_cast<int>(positionY_ - PlayerHeight); // 描画の下端(bottom)は positionY_ と同じ
+	const int debugTop = static_cast<int>(positionY_ - SIZE_Y); // 描画の下端(bottom)は positionY_ と同じ
 	const int debugBottom = static_cast<int>(positionY_);
 
 	DrawBox(debugLeft, debugTop, debugRight, debugBottom, GetColor(255, 0, 0), FALSE); // FALSEで枠線のみ
@@ -199,4 +197,153 @@ float Player::GetX() const
 float Player::GetY() const
 {
 	return positionY_;
+}
+
+// プレイヤーの移動操作
+void Player::ProcessMove(const InputManager& input)
+{
+	// DxLib標準の汎用パッド入力を取得(左スティック・十字キー対応)
+	const int padState = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+
+	const float moveInput =
+		(input.IsNew(KEY_INPUT_RIGHT) || (padState & PAD_INPUT_RIGHT) ? 1.0f : 0.0f) -
+		(input.IsNew(KEY_INPUT_LEFT)  || (padState & PAD_INPUT_LEFT)  ? 1.0f : 0.0f);
+
+	if (moveInput > 0.0f)
+	{
+		Accele(MOVE_ACC);
+	}
+	else if (moveInput < 0.0f)
+	{
+		Accele(-MOVE_ACC);
+	}
+	else
+	{
+		Decelerate(MOVE_DEC);
+	}
+}
+
+// 加速(スピードを加える)
+void Player::Accele(float speed)
+{
+	velocityX_ += speed;
+	if (velocityX_ > MAX_MOVE_SPEED) velocityX_ = MAX_MOVE_SPEED;
+	if (velocityX_ < -MAX_MOVE_SPEED) velocityX_ = -MAX_MOVE_SPEED;
+}
+
+// 減速(ディセラレイト)
+void Player::Decelerate(float speed)
+{
+	if (velocityX_ > 0.0f)
+	{
+		velocityX_ -= speed;
+		if (velocityX_ < 0.0f) velocityX_ = 0.0f;
+	}
+	else if (velocityX_ < 0.0f)
+	{
+		velocityX_ += speed;
+		if (velocityX_ > 0.0f) velocityX_ = 0.0f;
+	}
+}
+
+// 移動(実際の座標移動)
+void Player::Move(void)
+{
+	const float playerHalfWidth = static_cast<float>(SIZE_X) / 2.0f;
+	const float prevX = positionX_;
+	
+	positionX_ += velocityX_;
+
+	// 画面（ステージ）外に出ないようにクランプ
+	const float clampedStageWidth = (std::max)(0.0f, stage_->GetStageWidth());
+	const float minX = playerHalfWidth;
+	const float maxX = (std::max)(minX, clampedStageWidth - playerHalfWidth);
+	positionX_ = (std::max)(minX, (std::min)(positionX_, maxX));
+
+	// 段差より下にいる時だけ側面衝突を有効にする
+	const float stepTopY = stage_->GetStepTopY();
+	const float stepStartX = stage_->GetStepStartX();
+	const float stepEndX = stage_->GetStepEndX();
+	const bool isBelowStepTop = (positionY_ > stepTopY + 0.5f);
+	if (isBelowStepTop)
+	{
+		if ((prevX + playerHalfWidth <= stepStartX) && (positionX_ + playerHalfWidth > stepStartX))
+		{
+			positionX_ = stepStartX - playerHalfWidth;
+			velocityX_ = 0.0f;
+		}
+		else if ((prevX - playerHalfWidth >= stepEndX) && (positionX_ - playerHalfWidth < stepEndX))
+		{
+			positionX_ = stepEndX + playerHalfWidth;
+			velocityX_ = 0.0f;
+		}
+	}
+
+	// 足元の床高さを取得
+	const float supportGroundY = stage_->GetGroundYAtX(positionX_);
+	if (onGround_ && (positionY_ < supportGroundY - 0.5f))
+	{
+		onGround_ = false;
+	}
+
+	positionY_ += velocityY_;
+	if (positionY_ >= supportGroundY)
+	{
+		positionY_ = supportGroundY;
+		velocityY_ = 0.0f;
+		onGround_ = true;
+	}
+}
+
+// 重力をかける
+void Player::AddGravity(void)
+{
+	velocityY_ += GRAVITY;
+}
+
+// プレイヤーのジャンプ操作
+void Player::ProcessJump(const InputManager& input)
+{
+	// SPACEキー または コントローラのAボタン(JOYPAD_BTN::DOWN が Aボタンに該当)
+	const bool jumpTrg = input.IsTrgDown(KEY_INPUT_SPACE) || input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN);
+	const bool jumpHold = input.IsNew(KEY_INPUT_SPACE)    || input.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN);
+
+	// マリオ風フレームジャンプ：押した瞬間にジャンプ開始、押し続けで一定フレーム上昇
+	if (onGround_ && jumpTrg)
+	{
+		onGround_ = false;
+		jumpTimer_ = INPUT_JUMP_FRAME;
+		Jump(); // 初速を与える
+	}
+	else if (!onGround_)
+	{
+		// 空中かつボタンを押し続けているなら上昇力を維持（大ジャンプ）
+		if (jumpHold && jumpTimer_ > 0)
+		{
+			jumpTimer_--;
+			Jump();
+		}
+		// ボタンを離した、かつまだ上昇中なら速度をカット（小ジャンプ）
+		else if (!jumpHold && velocityY_ < 0.0f)
+		{
+			jumpTimer_ = 0;
+			velocityY_ *= 0.5f; // 上昇力を半減させて急落下させる
+		}
+		else
+		{
+			jumpTimer_ = 0;
+		}
+	}
+}
+
+// ジャンプ
+void Player::Jump(void)
+{
+	SetJumpPow(MAX_JUMP_POW);
+}
+
+// ジャンプ力の設定
+void Player::SetJumpPow(float pow)
+{
+	velocityY_ = -pow;
 }

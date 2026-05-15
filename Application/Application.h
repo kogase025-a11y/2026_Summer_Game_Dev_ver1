@@ -3,6 +3,7 @@
 
 class SceneManager;
 class FileManager;
+class Fps;
 
 class Application
 {
@@ -24,5 +25,6 @@ public:
 private:
 	std::unique_ptr<SceneManager> sceneMana;	//シーンマネージャーのインスタンスのポインタ
 	std::unique_ptr<FileManager> fileMng_;
+	std::unique_ptr<Fps> fps_;
 };
 
