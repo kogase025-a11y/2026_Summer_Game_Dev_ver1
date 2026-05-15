@@ -19,6 +19,9 @@ public:
     float GetGoalX() const;
     float GetStageWidth() const;
 
+    float GetPuddleStartX() const;
+    float GetPuddleEndX() const;
+
 private:
     float groundY_;
     float stepStartX_;
@@ -27,4 +30,7 @@ private:
 
     float goalX_;
     float stageWidth_;
+
+    float puddleStartX_;
+    float puddleEndX_;
 };

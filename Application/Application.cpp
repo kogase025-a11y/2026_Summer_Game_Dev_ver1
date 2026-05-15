@@ -5,6 +5,7 @@
 #include "../Manager/FileManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Input/InputManager.h"
+#include "../FPS/Fps.h"
 
 Application::Application()
 {
@@ -30,6 +31,7 @@ bool Application::SystemInit(void)
 
 	fileMng_.reset(new FileManager());
 	sceneMana.reset(new SceneManager(*fileMng_));
+	fps_.reset(new Fps());
 
 	return true;
 }
@@ -53,11 +55,20 @@ void Application::Run(void)
 		Update();
 		Draw();
 		ScreenFlip();
+		if (fps_)
+		{
+			fps_->Wait();
+		}
 	}
 }
 
 void Application::Update(void)
 {
+	if (fps_)
+	{
+		fps_->Update();
+	}
+
 	InputManager::GetInstance().Update();
 
 	if (sceneMana)
@@ -73,10 +84,16 @@ void Application::Draw(void)
 	{
 		sceneMana->Draw();
 	}
+
+	if (fps_)
+	{
+		fps_->Draw();
+	}
 }
 
 bool Application::Release(void)
 {
+	fps_.reset();
 	sceneMana.reset();
 	fileMng_.reset();
 	InputManager::GetInstance().Destroy();
