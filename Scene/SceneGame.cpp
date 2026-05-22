@@ -48,12 +48,12 @@ void SceneGame::Update()
 		if (upPressed)
 		{
 			pauseCursor_--;
-			if (pauseCursor_ < 0) pauseCursor_ = 2;
+			if (pauseCursor_ < 0) pauseCursor_ = 3;
 		}
 		if (downPressed)
 		{
 			pauseCursor_++;
-			if (pauseCursor_ > 2) pauseCursor_ = 0;
+			if (pauseCursor_ > 3) pauseCursor_ = 0;
 		}
 
 		// ENTERキー または Bボタン(RIGHT), Aボタン(DOWN) で決定
@@ -67,9 +67,13 @@ void SceneGame::Update()
 			}
 			else if (pauseCursor_ == 1)
 			{
-				EndScene(SceneID::TITLE); // タイトルへ
+				EndScene(SceneID::STAGE_SELECT); // ステージセレクトへ
 			}
 			else if (pauseCursor_ == 2)
+			{
+				EndScene(SceneID::TITLE); // タイトルへ
+			}
+			else if (pauseCursor_ == 3)
 			{
 				EndScene(SceneID::EXIT); // 終了
 			}
@@ -135,9 +139,11 @@ void SceneGame::Draw()
 		int color0 = (pauseCursor_ == 0) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
 		int color1 = (pauseCursor_ == 1) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
 		int color2 = (pauseCursor_ == 2) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
+		int color3 = (pauseCursor_ == 3) ? GetColor(255, 255, 0) : GetColor(200, 200, 200);
 
-		DrawString(kScreenWidth / 2 - 120, 500, (pauseCursor_ == 0 ? "> RESUME" : "  RESUME"), color0);
-		DrawString(kScreenWidth / 2 - 120, 540, (pauseCursor_ == 1 ? "> TITLE" : "  TITLE"), color1);
-		DrawString(kScreenWidth / 2 - 120, 580, (pauseCursor_ == 2 ? "> QUIT GAME" : "  QUIT GAME"), color2);
+		DrawString(kScreenWidth / 2 - 120, 480, (pauseCursor_ == 0 ? "> RESUME" : "  RESUME"), color0);
+		DrawString(kScreenWidth / 2 - 120, 520, (pauseCursor_ == 1 ? "> TO STAGE SELECT" : "  TO STAGE SELECT"), color1);
+		DrawString(kScreenWidth / 2 - 120, 560, (pauseCursor_ == 2 ? "> TO TITLE" : "  TO TITLE"), color2);
+		DrawString(kScreenWidth / 2 - 120, 600, (pauseCursor_ == 3 ? "> QUIT GAME" : "  QUIT GAME"), color3);
 	}
 }

@@ -6,6 +6,7 @@
 #include "FileManager.h"
 
 #include "../Scene/SceneTitle.h"
+#include "../Scene/SceneStageSelect.h"
 #include "../Scene/SceneGame.h"
 #include "../Scene/SceneClear.h"
 
@@ -103,6 +104,9 @@ void SceneManager::ChangeScene(SceneSuper::SceneID nextSceneID)
 	{
 	case SceneSuper::SceneID::TITLE:
 		currentScene = std::unique_ptr<SceneSuper>(new SceneTitle(fileMng_));
+		break;
+	case SceneSuper::SceneID::STAGE_SELECT:
+		currentScene = std::unique_ptr<SceneSuper>(new SceneStageSelect(fileMng_));
 		break;
 	case SceneSuper::SceneID::GAME:
 		currentScene = std::unique_ptr<SceneSuper>(new SceneGame(fileMng_, this));

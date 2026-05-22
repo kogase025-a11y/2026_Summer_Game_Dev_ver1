@@ -22,7 +22,7 @@ void SceneTitle::Update()
 		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
 		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
-		EndScene(SceneID::GAME);
+		EndScene(SceneID::STAGE_SELECT);
 	}
 }
 
