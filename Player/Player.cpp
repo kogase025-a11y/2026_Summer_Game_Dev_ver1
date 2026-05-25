@@ -267,20 +267,43 @@ void Player::Move(void)
 	const bool isBelowStepTop = (positionY_ > stepTopY + 0.5f);
 	if (isBelowStepTop)
 	{
-		if ((prevX + playerHalfWidth <= stepStartX) && (positionX_ + playerHalfWidth > stepStartX))
+		// 新しい座標が壁の中に入っているか
+		if (positionX_ + playerHalfWidth > stepStartX && positionX_ - playerHalfWidth < stepEndX)
 		{
-			positionX_ = stepStartX - playerHalfWidth;
-			velocityX_ = 0.0f;
-		}
-		else if ((prevX - playerHalfWidth >= stepEndX) && (positionX_ - playerHalfWidth < stepEndX))
-		{
-			positionX_ = stepEndX + playerHalfWidth;
-			velocityX_ = 0.0f;
+			// 古い座標を用いて左からぶつかったか、右からぶつかったか判定
+			if (prevX + playerHalfWidth <= stepStartX)
+			{
+				positionX_ = stepStartX - playerHalfWidth;
+				velocityX_ = 0.0f;
+			}
+			else if (prevX - playerHalfWidth >= stepEndX)
+			{
+				positionX_ = stepEndX + playerHalfWidth;
+				velocityX_ = 0.0f;
+			}
+			else
+			{
+				// 上から落ちてきた場合などの押し出し（念のため中央より近い方へ押し出す）
+				float stepMidX = stepStartX + (stepEndX - stepStartX) * 0.5f;
+				if (positionX_ < stepMidX)
+				{
+					positionX_ = stepStartX - playerHalfWidth;
+				}
+				else
+				{
+					positionX_ = stepEndX + playerHalfWidth;
+				}
+				velocityX_ = 0.0f;
+			}
 		}
 	}
 
-	// 足元の床高さを取得
-	const float supportGroundY = stage_->GetGroundYAtX(positionX_);
+	// 足元の床高さを取得（プレイヤーの幅を考慮して一番高い床に乗る）
+	const float supportYCenter = stage_->GetGroundYAtX(positionX_);
+	const float supportYLeft = stage_->GetGroundYAtX(positionX_ - playerHalfWidth + 1.0f);
+	const float supportYRight = stage_->GetGroundYAtX(positionX_ + playerHalfWidth - 1.0f);
+	const float supportGroundY = (std::min)(supportYCenter, (std::min)(supportYLeft, supportYRight));
+
 	if (onGround_ && (positionY_ < supportGroundY - 0.5f))
 	{
 		onGround_ = false;

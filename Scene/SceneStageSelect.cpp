@@ -139,14 +139,14 @@ void SceneStageSelect::UpdateInput()
 	{
 		nextStageIndex_ = selectedStageIndex_ - 1;
 		if (nextStageIndex_ < 1) nextStageIndex_ = kMaxStages;
-		rotationDir_ = -1;
+		rotationDir_ = 1;
 		StartTransition();
 	}
 	else if (downPressed)
 	{
 		nextStageIndex_ = selectedStageIndex_ + 1;
 		if (nextStageIndex_ > kMaxStages) nextStageIndex_ = 1;
-		rotationDir_ = 1;
+		rotationDir_ = -1;
 		StartTransition();
 	}
 	else if (input.IsTrgDown(KEY_INPUT_RETURN) ||
@@ -226,13 +226,22 @@ void SceneStageSelect::DrawRing(int ox, int oy)
 	for (int i = 0; i < kMaxStages; i++)
 	{
 		// 要素ごとの角度（0が真下になるように + DX_PI_F/2 等で調整）
-		float angle = currentAngle + (i * DX_PI_F * 2.0f / kMaxStages) + (DX_PI_F / 2.0f);
+		float angle = currentAngle + (i * DX_PI_F * 2.0f / kMaxStages) - (DX_PI_F / 2.0f);
 		int x = cx + (int)(cosf(angle) * 350.0f);
 		int y = cy + (int)(sinf(angle) * 350.0f);
 		
 		int displayIndex = (kMaxStages - i + selectedStageIndex_ - 1) % kMaxStages + 1;
 
-		int color = (displayIndex == drawingStageIndex_ && animState_ == SelectAnimState::Idle) ? GetColor(255, 255, 0) : GetColor(150, 150, 150);
+		bool isSelected = ((i + 1) == drawingStageIndex_ && animState_ == SelectAnimState::Idle);
+		
+		if (isSelected) 
+		{ 
+			SetDrawBlendMode(DX_BLENDMODE_ADD, 128 + (int)(sinf(arrowAnimTimer_ * 5.0f) * 127)); 
+			DrawCircle(x, y, 75, GetColor(255, 255, 100), TRUE); 
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); 
+		} 
+		
+		int color = isSelected ? GetColor(255, 255, 0) : GetColor(150, 150, 150);
 		DrawCircle(x, y, 60, color, TRUE); 
 		
 		if (i + 1 == 4)
@@ -272,3 +281,6 @@ void SceneStageSelect::DrawArrow(int ox, int oy)
 	int btmY = cy + 200 + (int)arrowOffset_;
 	DrawTriangle(cx, btmY + 30, cx - 40, btmY - 20, cx + 40, btmY - 20, GetColor(200, 200, 200), TRUE);
 }
+
+
+
