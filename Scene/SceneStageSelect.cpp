@@ -26,7 +26,7 @@ void SceneStageSelect::Update()
 
 	// ESCキー または STARTボタン でポーズの切り替え
 	if (input.IsTrgDown(KEY_INPUT_ESCAPE) ||
-		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT))
 	{
 		isPause_ = !isPause_;
 		if (isPause_) pauseCursor_ = 0; // ポーズを開いた時にカーソルをリセット
@@ -153,7 +153,14 @@ void SceneStageSelect::UpdateInput()
 			 input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
 			 input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
-		EndScene(SceneID::GAME);
+		if (selectedStageIndex_ == 4)
+		{
+			EndScene(SceneID::SETTING);
+		}
+		else
+		{
+			EndScene(SceneID::GAME);
+		}
 	}
 }
 
@@ -227,14 +234,29 @@ void SceneStageSelect::DrawRing(int ox, int oy)
 
 		int color = (displayIndex == drawingStageIndex_ && animState_ == SelectAnimState::Idle) ? GetColor(255, 255, 0) : GetColor(150, 150, 150);
 		DrawCircle(x, y, 60, color, TRUE); 
-		DrawFormatString(x - 20, y - 10, GetColor(0, 0, 0), "STG %d", i + 1);
+		
+		if (i + 1 == 4)
+		{
+			DrawFormatString(x - 30, y - 10, GetColor(0, 0, 0), "SETTING");
+		}
+		else
+		{
+			DrawFormatString(x - 20, y - 10, GetColor(0, 0, 0), "STG %d", i + 1);
+		}
 	}
 }
 
 void SceneStageSelect::DrawStageName(int ox, int oy)
 {
 	DrawStringToHandle(1920 / 2 - 140, 1080 / 2 - 60, "STAGE SELECT", GetColor(255, 255, 255), explanFontHandle);
-	DrawFormatStringToHandle(1920 / 2 - 80, 1080 / 2, GetColor(255, 255, 0), explanFontHandle, "STAGE %d", drawingStageIndex_);
+	if (drawingStageIndex_ == 4)
+	{
+		DrawFormatStringToHandle(1920 / 2 - 80, 1080 / 2, GetColor(255, 255, 0), explanFontHandle, "SETTING");
+	}
+	else
+	{
+		DrawFormatStringToHandle(1920 / 2 - 80, 1080 / 2, GetColor(255, 255, 0), explanFontHandle, "STAGE %d", drawingStageIndex_);
+	}
 }
 
 void SceneStageSelect::DrawArrow(int ox, int oy)

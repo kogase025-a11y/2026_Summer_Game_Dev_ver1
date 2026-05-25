@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Scene\SceneSetting.cpp" />
     <ClCompile Include="Scene\SceneStageSelect.cpp" />
     <ClCompile Include="Util\AsoUtility.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Scene\SceneSetting.h" />
     <ClInclude Include="Scene\SceneStageSelect.h" />
     <ClInclude Include="Stage\StageScript\StageScriptSuper.h" />
     <ClInclude Include="Stage\StageConfig\StageConfig.h" />

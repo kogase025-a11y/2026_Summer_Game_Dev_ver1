@@ -19,6 +19,7 @@ void SceneTitle::Update()
 	auto& input = InputManager::GetInstance();
 	// ENTER または コントローラのSTARTキーかAボタンでゲーム開始
 	if (input.IsTrgDown(KEY_INPUT_RETURN) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT) ||
 		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
 		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{

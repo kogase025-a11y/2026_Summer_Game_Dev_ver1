@@ -1,6 +1,7 @@
 #include "SceneClear.h"
 
 #include "../Manager/FileManager.h"
+#include "../Input/InputManager.h"
 
 SceneClear::SceneClear(FileManager&)
 {
@@ -9,7 +10,11 @@ SceneClear::SceneClear(FileManager&)
 void SceneClear::Update()
 {
 	// ENTER‚Åƒ^ƒCƒgƒ‹‚Ö–ß‚é
-	if (CheckHitKey(KEY_INPUT_RETURN) != 0)
+	auto& input = InputManager::GetInstance();
+	if (input.IsTrgDown(KEY_INPUT_RETURN) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
+		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
 		EndScene(SceneID::TITLE);
 	}

@@ -9,6 +9,7 @@
 #include "../Scene/SceneStageSelect.h"
 #include "../Scene/SceneGame.h"
 #include "../Scene/SceneClear.h"
+#include "../Scene/SceneSetting.h"
 
 SceneManager::SceneManager(FileManager& fileMng) : fileMng_(fileMng)
 {
@@ -113,6 +114,9 @@ void SceneManager::ChangeScene(SceneSuper::SceneID nextSceneID)
 		break;
 	case SceneSuper::SceneID::CLEAR:
 		currentScene = std::unique_ptr<SceneSuper>(new SceneClear(fileMng_));
+		break;
+	case SceneSuper::SceneID::SETTING:
+		currentScene = std::unique_ptr<SceneSuper>(new SceneSetting(fileMng_));
 		break;
 	case SceneSuper::SceneID::EXIT:
 		isExit = true;

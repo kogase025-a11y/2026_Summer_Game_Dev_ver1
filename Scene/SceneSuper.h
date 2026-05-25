@@ -10,6 +10,7 @@ public:
 		STAGE_SELECT,
 		GAME,
 		CLEAR,
+		SETTING,
 		EXIT,
 	};
 
