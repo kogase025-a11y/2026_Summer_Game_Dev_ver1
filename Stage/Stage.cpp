@@ -3,13 +3,21 @@
 
 Stage::Stage()
     : groundY_(760.0f)
-    , stepStartX_(1800.0f)
-    , stepEndX_(2500.0f)
+    , stepStartX_(1400.0f)
+    , stepEndX_(2200.0f)
     , stepTopY_(640.0f)
+    , step2StartX_(2700.0f)
+    , step2EndX_(3000.0f)
+    , step2TopY_(640.0f)
+    , step3StartX_(3600.0f)
+    , step3EndX_(4000.0f)
+    , step3TopY_(800.0f)
     , goalX_(4700.0f)
     , stageWidth_(5000.0f)
     , puddleStartX_(800.0f)
     , puddleEndX_(1200.0f)
+	, diatyStartX_(3000.0f)
+	, diatyEndX_(3600.0f)
 {
 }
 
@@ -24,15 +32,31 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
     DrawBox(0, groundY, screenWidth, screenHeight, GetColor(60, 170, 60), TRUE);
 
     // êÖÇΩÇ‹ÇËÇÃï`âÊ(è∞Ç∆èdÇ»ÇÈÇÊÇ§Ç…ê¬êFÇ≈ï`âÊ)
-    const int puddleLeft = static_cast<int>(puddleStartX_ - cameraX);
-    const int puddleRight = static_cast<int>(puddleEndX_ - cameraX);
+    const int puddleLeft = static_cast<int>(puddleStartX_  - cameraX);
+    const int puddleRight = static_cast<int>(puddleEndX_   - cameraX);
     DrawBox(puddleLeft, groundY, puddleRight, groundY + 20, GetColor(50, 50, 200), TRUE);
+   
+    const int diatyLeft = static_cast<int>(diatyStartX_ - cameraX);
+    const int diatyRight = static_cast<int>(diatyEndX_ - cameraX);
+    DrawBox(diatyLeft, groundY, diatyRight, groundY + 20, GetColor(50, 50, 200), TRUE);
 
+    
     // íiç∑ÇÃï`âÊ
     const int stepLeft = static_cast<int>(stepStartX_ - cameraX);
     const int stepRight = static_cast<int>(stepEndX_ - cameraX);
     const int stepTop = static_cast<int>(stepTopY_);
     DrawBox(stepLeft, stepTop, stepRight, groundY, GetColor(110, 110, 110), TRUE);
+
+    // íiç∑ÇÃï`âÊ
+    const int step2Left = static_cast<int>(step2StartX_ - cameraX);
+    const int step2Right = static_cast<int>(step2EndX_ - cameraX);
+    const int step2Top = static_cast<int>(step2TopY_);
+    DrawBox(step2Left, step2Top, step2Right, groundY, GetColor(110, 110, 110), TRUE);
+
+    const int step3Left = static_cast<int>(step3StartX_ - cameraX);
+    const int step3Right = static_cast<int>(step3EndX_ - cameraX);
+    const int step3Top = static_cast<int>(step3TopY_);
+    DrawBox(step3Left, step3Top, step3Right, groundY, GetColor(110, 110, 110), TRUE);
 
     // ÉSÅ[ÉãÇÃï`âÊ
     const int goalDrawX = static_cast<int>(goalX_ - cameraX);
@@ -44,6 +68,9 @@ float Stage::GetGroundY() const { return groundY_; }
 float Stage::GetStepStartX() const { return stepStartX_; }
 float Stage::GetStepEndX() const { return stepEndX_; }
 float Stage::GetStepTopY() const { return stepTopY_; }
+float Stage::GetStep2StartX() const { return step2StartX_; }
+float Stage::GetStep2EndX() const { return step2EndX_; }
+float Stage::GetStep2TopY() const { return step2TopY_; }
 
 float Stage::GetGroundYAtX(float x) const
 {
@@ -51,11 +78,31 @@ float Stage::GetGroundYAtX(float x) const
     {
         return stepTopY_;
     }
+    if (x >= step2StartX_ && x <= step2EndX_)
+    {
+        return step2TopY_;
+    }
+    if (x >= step3StartX_ && x <= step3EndX_)
+    {
+        return step3TopY_;
+    }
+    
+    
     return groundY_;
+    
+
+
+
 }
 
+
+   
 float Stage::GetGoalX() const { return goalX_; }
 float Stage::GetStageWidth() const { return stageWidth_; }
 
 float Stage::GetPuddleStartX() const { return puddleStartX_; }
 float Stage::GetPuddleEndX() const { return puddleEndX_; }
+
+float Stage::GetDiatyStartX() const { return diatyStartX_; }
+float Stage::GetDiatyEndX() const { return diatyEndX_; }
+
