@@ -12,7 +12,7 @@ Player::Player(Stage* stage, FileManager& fileMng) : stage_(stage), fileMng_(fil
 	 wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaperYogore2.PNG");
 	 wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaperYogore3.PNG");
 	 jumpSe_ = fileMng_.LoadSoundFM("Image/Sound/jump03.mp3");
-	 fallSe_ = fileMng_.LoadSoundFM("Level up! Ragnarok.mp3");
+	 fallSe_ = fileMng_.LoadSoundFM("Image/Sound/Level up! Ragnarok.mp3");
 	 puddleSe_ = fileMng_.LoadSoundFM("Image/Sound/powerdown07.mp3");
 }
 

@@ -6,7 +6,7 @@
 
 SceneTitle::SceneTitle(FileManager& fileMng)
 
-	: titleBg_(fileMng.LoadImageFM("./image/GameClear.png"))//タイトルシーン画像の読み込み
+	: titleBg_(fileMng.LoadImageFM("./image/GameTitle.png"))//タイトルシーン画像の読み込み
 {
 	
 	

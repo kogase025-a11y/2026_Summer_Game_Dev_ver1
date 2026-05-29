@@ -1,8 +1,10 @@
 #pragma once
 #include "SceneSuper.h"
 #include <DxLib.h>
+#include <memory>
 
 class FileManager;
+class ImageFile;
 
 class SceneClear : public SceneSuper
 {
@@ -14,4 +16,6 @@ public:
 	// ‰æ–Ê•`‰æ
 	void Draw() override;
 
+private:
+	std::shared_ptr<ImageFile> clearBg_;
 };
