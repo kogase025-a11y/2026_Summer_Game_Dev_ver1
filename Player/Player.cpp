@@ -144,6 +144,8 @@ void Player::Draw(float cameraX, int playerGraphHandle) const
 	const int drawX = static_cast<int>(positionX_ - cameraX);
 	const int drawY = static_cast<int>(positionY_);
 
+	
+
 	// ˆê“x‚Å‚à…‚½‚Ü‚è‚Å‰˜‚ê‚½‚çA‚»‚Ìó‘Ô‚ðˆÛŽ‚µ‚Ä•`‰æ
 	if (dirtLevel_ > 0)
 	{

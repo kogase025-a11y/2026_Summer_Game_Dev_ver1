@@ -22,6 +22,10 @@ public:
     float GetStep3EndX() const;
     float GetStep3TopY() const;
 
+	float GetSlopeStartX() const;
+	float GetSlopeEndX() const;
+	float GetSlopeStartY() const;
+
     float GetGroundYAtX(float x) const;
 
     float GetGoalX() const;
@@ -40,12 +44,18 @@ private:
     float stepStartX_;
     float stepEndX_;
     float stepTopY_;
+
     float step2StartX_;
     float step2EndX_;
     float step2TopY_;
+
     float step3StartX_;
     float step3EndX_;
     float step3TopY_;
+
+	float slopeStartX_;
+	float slopeEndX_;
+     
     float goalX_;
     float stageWidth_;
 

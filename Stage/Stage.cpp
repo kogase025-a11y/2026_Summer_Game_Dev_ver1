@@ -10,7 +10,7 @@ Stage::Stage()
     , step2EndX_(3000.0f)
     , step2TopY_(640.0f)
     , step3StartX_(3600.0f)
-    , step3EndX_(4000.0f)
+    , step3EndX_(3800.0f)
     , step3TopY_(600.0f)
     , goalX_(4700.0f)
     , stageWidth_(5000.0f)
@@ -18,6 +18,8 @@ Stage::Stage()
     , puddleEndX_(1200.0f)
 	, diatyStartX_(3000.0f)
 	, diatyEndX_(3600.0f)
+	, slopeStartX_(4000.0f)
+	, slopeEndX_(4500.0f)
 {
 }
 
@@ -57,8 +59,12 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
     const int step3Right = static_cast<int>(step3EndX_ - cameraX);
     const int step3Top = static_cast<int>(step3TopY_);
     DrawBox(step3Left, step3Top, step3Right, groundY, GetColor(110, 110, 110), TRUE);
-
+    //ç‚ÇÃï`é 
+	const int slopeLeft = static_cast<int>(slopeStartX_ - cameraX);
+	const int slopeRight = static_cast<int>(slopeEndX_ - cameraX);
+	DrawTriangle(slopeLeft, groundY, slopeRight, groundY, slopeRight, groundY - 200, GetColor(110, 110, 110), TRUE);
     // ÉSÅ[ÉãÇÃï`âÊ
+
     const int goalDrawX = static_cast<int>(goalX_ - cameraX);
     DrawBox(goalDrawX - 8, groundY - 180, goalDrawX + 8, groundY, GetColor(255, 255, 255), TRUE);
     DrawTriangle(goalDrawX + 8, groundY - 180, goalDrawX + 72, groundY - 150, goalDrawX + 8, groundY - 120, GetColor(255, 80, 80), TRUE);
@@ -77,6 +83,11 @@ float Stage::GetStep3StartX() const { return step3StartX_; }
 float Stage::GetStep3EndX() const { return step3EndX_; }
 float Stage::GetStep3TopY() const { return step3TopY_; }
 
+
+float Stage::GetSlopeStartX() const { return slopeStartX_; }
+float Stage::GetSlopeEndX() const { return slopeEndX_; }
+float Stage::GetSlopeStartY() const { return groundY_; }
+
 float Stage::GetGroundYAtX(float x) const
 {
     if (x >= stepStartX_ && x <= stepEndX_)
@@ -92,6 +103,13 @@ float Stage::GetGroundYAtX(float x) const
         return step3TopY_;
     }
     
+    if (x >= slopeStartX_ && x <= slopeEndX_)
+    {
+        const float slopeHeight = 200.0f; // åXéŒÇÃçÇÇ≥
+        const float slopeWidth = slopeEndX_ - slopeStartX_;
+        const float slopeProgress = (x - slopeStartX_) / slopeWidth;
+        return groundY_ - slopeHeight * slopeProgress;
+	}
     
     return groundY_;
     
