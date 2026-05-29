@@ -2,7 +2,7 @@
 #include <map>
 #include <DxLib.h>
 #include <array>
-#include "../Util/Vector2.h"
+#include "../../Util/Vector2.h"
 
 class InputManager
 {

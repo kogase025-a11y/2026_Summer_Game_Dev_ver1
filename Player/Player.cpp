@@ -299,15 +299,28 @@ void Player::Move(void)
 	const float stepTopY = stage_->GetStepTopY();
 	const float stepStartX = stage_->GetStepStartX();
 	const float stepEndX = stage_->GetStepEndX();
+
 	const float step2TopY = stage_->GetStep2TopY();
 	const float step2StartX = stage_->GetStep2StartX();
 	const float step2EndX = stage_->GetStep2EndX();
-	const bool isBelowStepTop = (positionY_ > stepTopY, positionY_ > step2TopY + 0.5f);
+
+	const float step3TopY = stage_->GetStep3TopY();
+	const float step3StartX = stage_->GetStep3StartX();
+	const float step3EndX = stage_->GetStep3EndX();
+
+	const float slopeStartX = stage_->GetSlopeStartX();
+	const float slopeEndX = stage_->GetSlopeEndX();
+	const float slopeTopY = stage_->GetSlopeStartY() - 200.0f;
+
+	const bool isBelowStepTop = (positionY_ > stepTopY + 0.5f);
 	const bool isBelowStep2Top = (positionY_ > step2TopY + 0.5f);
+	const bool isBelowStep3Top = (positionY_ > step3TopY + 0.5f);
+	const bool isBelowSlopeTop = (positionY_ > slopeTopY + 0.5f);
+
 	if (isBelowStepTop)
 	{
 		// 新しい座標が壁の中に入っているか
-		if (positionX_ + playerHalfWidth > stepStartX && positionX_ , playerHalfWidth > stepStartX && positionX_ - playerHalfWidth < stepEndX)
+		if (positionX_ + playerHalfWidth > stepStartX && positionX_ - playerHalfWidth < stepEndX)
 		{
 			// 古い座標を用いて左からぶつかったか、右からぶつかったか判定
 			if (prevX + playerHalfWidth <= stepStartX)
@@ -334,6 +347,14 @@ void Player::Move(void)
 				}
 				velocityX_ = 0.0f;
 			}
+		}
+	}
+
+	if (isBelowStep2Top)
+	{
+		// 新しい座標が壁の中に入っているか
+		if (positionX_ + playerHalfWidth > step2StartX && positionX_ - playerHalfWidth < step2EndX)
+		{
 			// 古い座標を用いて左からぶつかったか、右からぶつかったか判定
 			if (prevX + playerHalfWidth <= step2StartX)
 			{
@@ -342,7 +363,7 @@ void Player::Move(void)
 			}
 			else if (prevX - playerHalfWidth >= step2EndX)
 			{
-				positionX_ = stepEndX + playerHalfWidth;
+				positionX_ = step2EndX + playerHalfWidth;
 				velocityX_ = 0.0f;
 			}
 			else
@@ -351,40 +372,57 @@ void Player::Move(void)
 				float stepMidX = step2StartX + (step2EndX - step2StartX) * 0.5f;
 				if (positionX_ < stepMidX)
 				{
-					positionX_ = stepStartX - playerHalfWidth;
+					positionX_ = step2StartX - playerHalfWidth;
 				}
 				else
 				{
 					positionX_ = step2EndX + playerHalfWidth;
 				}
-
 				velocityX_ = 0.0f;
-				if (prevX + playerHalfWidth <= step2StartX)
-				{
-					positionX_ = step2StartX - playerHalfWidth;
-					velocityX_ = 0.0f;
-				}
-				else if (prevX - playerHalfWidth >= step2EndX)
-				{
-					positionX_ = stepEndX + playerHalfWidth;
-					velocityX_ = 0.0f;
-				}
+			}
+		}
+	}
 
+	if (isBelowStep3Top)
+	{
+		// 新しい座標が壁の中に入っているか
+		if (positionX_ + playerHalfWidth > step3StartX && positionX_ - playerHalfWidth < step3EndX)
+		{
+			// 古い座標を用いて左からぶつかったか、右からぶつかったか判定
+			if (prevX + playerHalfWidth <= step3StartX)
+			{
+				positionX_ = step3StartX - playerHalfWidth;
+				velocityX_ = 0.0f;
+			}
+			else if (prevX - playerHalfWidth >= step3EndX)
+			{
+				positionX_ = step3EndX + playerHalfWidth;
+				velocityX_ = 0.0f;
+			}
+			else
+			{
+				// 上から落ちてきた場合などの押し出し（念のため中央より近い方へ押し出す）
+				float stepMidX = step3StartX + (step3EndX - step3StartX) * 0.5f;
+				if (positionX_ < stepMidX)
+				{
+					positionX_ = step3StartX - playerHalfWidth;
+				}
 				else
 				{
-					// 上から落ちてきた場合などの押し出し（念のため中央より近い方へ押し出す）
-					float stepMidX = stepStartX + (stepEndX - stepStartX	) * 0.5f;
-					if (positionX_ < stepMidX)
-					{
-						positionX_ = stepStartX - playerHalfWidth;
-					}
-					else
-					{
-						positionX_ = stepEndX + playerHalfWidth;
-					}
-					velocityX_ = 0.0f;
+					positionX_ = step3EndX + playerHalfWidth;
 				}
+				velocityX_ = 0.0f;
 			}
+		}
+	}
+
+	if (isBelowSlopeTop)
+	{
+		// 坂道（△）は左から登れるため、右側の絶壁のみ横当たり判定を行う
+		if (positionX_ - playerHalfWidth < slopeEndX && prevX - playerHalfWidth >= slopeEndX)
+		{
+			positionX_ = slopeEndX + playerHalfWidth;
+			velocityX_ = 0.0f;
 		}
 	}
 
