@@ -16,7 +16,7 @@ public:
 		RIGHT,
 		DOWN,
 		LEFT,
-		MAX
+		MAX1
 	};
 
 	// •¶Žš—ñ‚Ì•ªŠ„

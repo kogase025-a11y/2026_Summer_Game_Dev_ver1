@@ -119,6 +119,8 @@ private:
 	bool onGround_ = true;
 	bool isInPuddle_ = false; // 水たまり判定フラグ
 	bool wasInPuddle_ = false; // 前回水たまりにいたかのフラグ
+	bool isInDiaty_ = false; // 汚れ地面判定フラグ
+	bool wasInDiaty_ = false; // 前回汚れ地面にいたかのフラグ
 	int dirtLevel_ = 0;       // 汚れ段階 (0: 新品, 1?3: 汚れ)
 	int jumpTimer_ = 0;
 

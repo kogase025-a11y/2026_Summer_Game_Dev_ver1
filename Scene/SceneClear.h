@@ -13,4 +13,5 @@ public:
 	void Update() override;
 	// ‰æ–Ê•`‰æ
 	void Draw() override;
+
 };

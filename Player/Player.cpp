@@ -31,6 +31,7 @@ bool Player::SystemInit(void)
 	onGround_ = true;
 	jumpTimer_ = 0;
 	dirtLevel_ = 0;
+	wasInDiaty_ = false;
 	wasInPuddle_ = false;
 	stateName_ = "Idle";
 	return true;
@@ -47,6 +48,7 @@ void Player::GameInit(void)
 	jumpTimer_ = 0;
 	dirtLevel_ = 0;
 	wasInPuddle_ = false;
+	wasInDiaty_ = false;
 	stateName_ = "Idle";
 }
 
@@ -85,13 +87,21 @@ void Player::Update(const InputManager& input)
 	isInPuddle_ = false;
 	const float puddleStart = stage_->GetPuddleStartX();
 	const float puddleEnd = stage_->GetPuddleEndX();
+
+	isInDiaty_ = false;
+	const float diatyStart = stage_->GetDiatyStartX();
+	const float diatyEnd = stage_->GetDiatyEndX();
 	// 通常地面に触れており、X座標が水たまりの範囲内なら水たまりと判定
 	if (onGround_ && (positionY_ == stage_->GetGroundY()) && 
 		(positionX_ >= puddleStart) && (positionX_ <= puddleEnd))
 	{
 		isInPuddle_ = true;
 	}
-
+	if (onGround_ && (positionY_ == stage_->GetGroundY()) &&
+		(positionX_ >= diatyStart) && (positionX_ <= diatyEnd))
+	{
+		isInDiaty_ = true;
+	}
 	// 水たまりに新しく入った瞬間なら汚れ段階をアップ
 	if (isInPuddle_ && !wasInPuddle_)
 	{
@@ -113,6 +123,14 @@ void Player::Update(const InputManager& input)
 	}
 	wasInPuddle_ = isInPuddle_;
 
+	if (isInDiaty_ && !wasInDiaty_)
+	{
+		if (dirtLevel_ < 3)
+		{
+			dirtLevel_++;
+		}
+	}
+	wasInDiaty_ = isInDiaty_;
 	// 状態名更新（アニメーション等で利用）
 	if (input.IsTrgDown(KEY_INPUT_X))
 	{
@@ -140,6 +158,8 @@ void Player::Draw(float cameraX, int playerGraphHandle) const
 {
 	const int drawX = static_cast<int>(positionX_ - cameraX);
 	const int drawY = static_cast<int>(positionY_);
+
+	
 
 	// 一度でも水たまりで汚れたら、その状態を維持して描画
 	if (dirtLevel_ > 0)
@@ -279,11 +299,15 @@ void Player::Move(void)
 	const float stepTopY = stage_->GetStepTopY();
 	const float stepStartX = stage_->GetStepStartX();
 	const float stepEndX = stage_->GetStepEndX();
-	const bool isBelowStepTop = (positionY_ > stepTopY + 0.5f);
+	const float step2TopY = stage_->GetStep2TopY();
+	const float step2StartX = stage_->GetStep2StartX();
+	const float step2EndX = stage_->GetStep2EndX();
+	const bool isBelowStepTop = (positionY_ > stepTopY, positionY_ > step2TopY + 0.5f);
+	const bool isBelowStep2Top = (positionY_ > step2TopY + 0.5f);
 	if (isBelowStepTop)
 	{
 		// 新しい座標が壁の中に入っているか
-		if (positionX_ + playerHalfWidth > stepStartX && positionX_ - playerHalfWidth < stepEndX)
+		if (positionX_ + playerHalfWidth > stepStartX && positionX_ , playerHalfWidth > stepStartX && positionX_ - playerHalfWidth < stepEndX)
 		{
 			// 古い座標を用いて左からぶつかったか、右からぶつかったか判定
 			if (prevX + playerHalfWidth <= stepStartX)
@@ -309,6 +333,57 @@ void Player::Move(void)
 					positionX_ = stepEndX + playerHalfWidth;
 				}
 				velocityX_ = 0.0f;
+			}
+			// 古い座標を用いて左からぶつかったか、右からぶつかったか判定
+			if (prevX + playerHalfWidth <= step2StartX)
+			{
+				positionX_ = step2StartX - playerHalfWidth;
+				velocityX_ = 0.0f;
+			}
+			else if (prevX - playerHalfWidth >= step2EndX)
+			{
+				positionX_ = stepEndX + playerHalfWidth;
+				velocityX_ = 0.0f;
+			}
+			else
+			{
+				// 上から落ちてきた場合などの押し出し（念のため中央より近い方へ押し出す）
+				float stepMidX = step2StartX + (step2EndX - step2StartX) * 0.5f;
+				if (positionX_ < stepMidX)
+				{
+					positionX_ = stepStartX - playerHalfWidth;
+				}
+				else
+				{
+					positionX_ = step2EndX + playerHalfWidth;
+				}
+
+				velocityX_ = 0.0f;
+				if (prevX + playerHalfWidth <= step2StartX)
+				{
+					positionX_ = step2StartX - playerHalfWidth;
+					velocityX_ = 0.0f;
+				}
+				else if (prevX - playerHalfWidth >= step2EndX)
+				{
+					positionX_ = stepEndX + playerHalfWidth;
+					velocityX_ = 0.0f;
+				}
+
+				else
+				{
+					// 上から落ちてきた場合などの押し出し（念のため中央より近い方へ押し出す）
+					float stepMidX = stepStartX + (stepEndX - stepStartX	) * 0.5f;
+					if (positionX_ < stepMidX)
+					{
+						positionX_ = stepStartX - playerHalfWidth;
+					}
+					else
+					{
+						positionX_ = stepEndX + playerHalfWidth;
+					}
+					velocityX_ = 0.0f;
+				}
 			}
 		}
 	}
