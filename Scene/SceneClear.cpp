@@ -3,7 +3,8 @@
 #include "../Manager/FileManager.h"
 #include "../Input/InputManager.h"
 
-SceneClear::SceneClear(FileManager&)
+SceneClear::SceneClear(FileManager& fileMng)
+	
 {
 }
 

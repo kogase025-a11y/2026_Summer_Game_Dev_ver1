@@ -11,7 +11,7 @@ Stage::Stage()
     , step2TopY_(640.0f)
     , step3StartX_(3600.0f)
     , step3EndX_(4000.0f)
-    , step3TopY_(800.0f)
+    , step3TopY_(600.0f)
     , goalX_(4700.0f)
     , stageWidth_(5000.0f)
     , puddleStartX_(800.0f)
@@ -68,9 +68,14 @@ float Stage::GetGroundY() const { return groundY_; }
 float Stage::GetStepStartX() const { return stepStartX_; }
 float Stage::GetStepEndX() const { return stepEndX_; }
 float Stage::GetStepTopY() const { return stepTopY_; }
+
 float Stage::GetStep2StartX() const { return step2StartX_; }
 float Stage::GetStep2EndX() const { return step2EndX_; }
 float Stage::GetStep2TopY() const { return step2TopY_; }
+
+float Stage::GetStep3StartX() const { return step3StartX_; }
+float Stage::GetStep3EndX() const { return step3EndX_; }
+float Stage::GetStep3TopY() const { return step3TopY_; }
 
 float Stage::GetGroundYAtX(float x) const
 {

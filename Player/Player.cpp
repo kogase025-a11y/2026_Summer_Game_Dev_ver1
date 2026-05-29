@@ -340,6 +340,7 @@ void Player::Move(void)
 				{
 					positionX_ = step2EndX + playerHalfWidth;
 				}
+
 				velocityX_ = 0.0f;
 				if (prevX + playerHalfWidth <= step2StartX)
 				{
@@ -351,6 +352,7 @@ void Player::Move(void)
 					positionX_ = stepEndX + playerHalfWidth;
 					velocityX_ = 0.0f;
 				}
+
 				else
 				{
 					// 上から落ちてきた場合などの押し出し（念のため中央より近い方へ押し出す）
