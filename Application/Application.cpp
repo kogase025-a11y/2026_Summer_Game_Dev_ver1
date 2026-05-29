@@ -4,7 +4,8 @@
 
 #include "../Manager/FileManager.h"
 #include "../Manager/SceneManager.h"
-#include "../Input/InputManager.h"
+#include "../Manager/Input/InputManager.h"
+#include "../Manager/BGMManager.h"
 #include "../FPS/Fps.h"
 
 Application::Application()

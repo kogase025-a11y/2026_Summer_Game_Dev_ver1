@@ -1,7 +1,7 @@
 #include "SceneClear.h"
 
 #include "../Manager/FileManager.h"
-#include "../Input/InputManager.h"
+#include "../Manager/Input/InputManager.h"
 
 SceneClear::SceneClear(FileManager&)
 {

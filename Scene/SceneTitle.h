@@ -2,6 +2,7 @@
 #include "SceneSuper.h"
 #include "../Manager/FileManager.h"
 #include "../Resource/ImageFile.h"
+#include "../Resource/SoundFile.h"
 #include <memory>
 #include <DxLib.h>
 

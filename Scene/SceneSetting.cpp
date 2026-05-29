@@ -1,5 +1,5 @@
 #include "SceneSetting.h"
-#include "../Input/InputManager.h"
+#include "../Manager/Input/InputManager.h"
 
 SceneSetting::SceneSetting(FileManager&)
 {

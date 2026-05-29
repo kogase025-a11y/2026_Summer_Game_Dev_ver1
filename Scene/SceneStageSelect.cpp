@@ -1,6 +1,6 @@
 #include "SceneStageSelect.h"
 #include "../Manager/FileManager.h"
-#include "../Input/InputManager.h"
+#include "../Manager/Input/InputManager.h"
 #include <DxLib.h>
 #include <math.h>
 
@@ -12,10 +12,29 @@ SceneStageSelect::SceneStageSelect(FileManager& fileMng)
 	offScreenHandle_ = MakeScreen(1920, 1080, TRUE);
 	live2DScreenHandle_ = -1;
 	fadeAlpha_ = 255.0f;
+
+	// 音声の読み込み（ダミーパス、入れ替えて使用してください）
+	bgm_ = fileMng.LoadSoundFM("Sound/BGM_Select.wav");
+	seCursor_ = fileMng.LoadSoundFM("Sound/SE_Cursor.wav");
+	seDecide_ = fileMng.LoadSoundFM("Sound/SE_Decide.wav");
+
+	// BGMの再生
+	/*
+	if (bgm_ && bgm_->GetHandle() != -1) {
+		PlaySoundMem(bgm_->GetHandle(), DX_PLAYTYPE_LOOP);
+	}
+	*/
 }
 
 SceneStageSelect::~SceneStageSelect()
 {
+	// BGMの停止
+	/*
+	if (bgm_ && bgm_->GetHandle() != -1) {
+		StopSoundMem(bgm_->GetHandle());
+	}
+	*/
+
 	DeleteFontToHandle(explanFontHandle);
 	DeleteGraph(offScreenHandle_);
 }
@@ -49,17 +68,33 @@ void SceneStageSelect::Update()
 		{
 			pauseCursor_--;
 			if (pauseCursor_ < 0) pauseCursor_ = 2;
+			/*
+			if (seCursor_ && seCursor_->GetHandle() != -1) {
+				PlaySoundMem(seCursor_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+			}
+			*/
 		}
 		if (downPressed)
 		{
 			pauseCursor_++;
 			if (pauseCursor_ > 2) pauseCursor_ = 0;
+			/*
+			if (seCursor_ && seCursor_->GetHandle() != -1) {
+				PlaySoundMem(seCursor_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+			}
+			*/
 		}
 
 		if (input.IsTrgDown(KEY_INPUT_RETURN) ||
 			input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT) ||
 			input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN))
 		{
+			/*
+			if (seDecide_ && seDecide_->GetHandle() != -1) {
+				PlaySoundMem(seDecide_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+			}
+			*/
+
 			if (pauseCursor_ == 0)
 			{
 				isPause_ = false; // 再開
@@ -140,6 +175,11 @@ void SceneStageSelect::UpdateInput()
 		nextStageIndex_ = selectedStageIndex_ - 1;
 		if (nextStageIndex_ < 1) nextStageIndex_ = kMaxStages;
 		rotationDir_ = 1;
+		/*
+		if (seCursor_ && seCursor_->GetHandle() != -1) {
+			PlaySoundMem(seCursor_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		}
+		*/
 		StartTransition();
 	}
 	else if (downPressed)
@@ -147,12 +187,22 @@ void SceneStageSelect::UpdateInput()
 		nextStageIndex_ = selectedStageIndex_ + 1;
 		if (nextStageIndex_ > kMaxStages) nextStageIndex_ = 1;
 		rotationDir_ = -1;
+		/*
+		if (seCursor_ && seCursor_->GetHandle() != -1) {
+			PlaySoundMem(seCursor_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		}
+		*/
 		StartTransition();
 	}
 	else if (input.IsTrgDown(KEY_INPUT_RETURN) ||
 			 input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
 			 input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
+		/*
+		if (seDecide_ && seDecide_->GetHandle() != -1) {
+			PlaySoundMem(seDecide_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		}
+		*/
 		if (selectedStageIndex_ == 4)
 		{
 			EndScene(SceneID::SETTING);

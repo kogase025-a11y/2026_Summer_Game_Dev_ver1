@@ -1,144 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ƒ\[ƒX ƒtƒ@ƒCƒ‹">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹">
+    <Filter Include="ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="ƒŠƒ\[ƒX ƒtƒ@ƒCƒ‹">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Application.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="FPS\Fps.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Manager\SceneManager.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneGame.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneClear.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneTitle.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\Fade.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\InputManager.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Stage\Stage.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Player\Player.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\AsoUtility.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\Vector2F.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneStageSelect.cpp">
-      <Filter>ƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </ClCompile>
+    <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Scene\SceneSetting.cpp" />
+    <ClCompile Include="Scene\SceneStageSelect.cpp" />
+    <ClCompile Include="Util\AsoUtility.cpp" />
+    <ClCompile Include="FPS\Fps.cpp" />
+    <ClCompile Include="Manager\Input\InputManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Manager\SceneManager.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Scene\SceneClear.cpp" />
+    <ClCompile Include="Scene\SceneGame.cpp" />
+    <ClCompile Include="Scene\SceneTitle.cpp" />
+    <ClCompile Include="Stage\Stage.cpp" />
+    <ClCompile Include="Util\Fade.cpp" />
+    <ClCompile Include="Util\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="FPS\Fps.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Manager\SceneManager.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Resource\FileSuper.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Manager\FileManager.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Manager\ResourceManager.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneSuper.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneTitle.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneGame.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneClear.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Resource\ImageFile.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Resource\SoundFile.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Util\Rect.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Util\Vector2.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Util\Fade.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Player\Player.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
-    <ClInclude Include="Input\InputManager.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+    <ClInclude Include="Manager\Input\InputManager.h">
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Stage\Stage.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Util\AsoUtility.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Util\Vector2F.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneStageSelect.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageScript\StageScriptSuper.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageConfig\StageConfig.h">
-      <Filter>ƒwƒbƒ_[ ƒtƒ@ƒCƒ‹</Filter>
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½@ï¿½Cï¿½ï¿½</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneSetting.h">
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½%40ï¿½Cï¿½ï¿½</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\BGMmanager.h">
+      <Filter>ï¿½wï¿½bï¿½_ï¿½[ ï¿½tï¿½%40ï¿½Cï¿½ï¿½</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Image\GameClear.PNG">
-      <Filter>ƒŠƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </Image>
-    <Image Include="Image\GameOver.PNG">
-      <Filter>ƒŠƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </Image>
-    <Image Include="Image\ToiletPaper.PNG">
-      <Filter>ƒŠƒ\[ƒX ƒtƒ@ƒCƒ‹</Filter>
-    </Image>
+    <Image Include="Image\GameClear.PNG" />
+    <Image Include="Image\GameOver.PNG" />
+    <Image Include="Image\ToiletPaper.PNG" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

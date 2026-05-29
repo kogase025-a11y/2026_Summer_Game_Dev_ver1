@@ -35,7 +35,9 @@ public:
 	void SetTransitionOut(float t) override;
 
 private:
-	
+	std::shared_ptr<SoundFile> bgm_;
+	std::shared_ptr<SoundFile> seCursor_;
+	std::shared_ptr<SoundFile> seDecide_;
 
 	void UpdateInput();
 	void UpdateAnimation();
@@ -105,5 +107,6 @@ private:
 	bool isPause_ = false;
 	int pauseCursor_ = 0;
 };
+
 
 

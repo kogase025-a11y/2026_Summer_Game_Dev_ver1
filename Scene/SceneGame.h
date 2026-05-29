@@ -1,6 +1,6 @@
 #pragma once
 #include "SceneSuper.h"
-#include "../Input/InputManager.h"
+#include "../Manager/Input/InputManager.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
 #include <DxLib.h>

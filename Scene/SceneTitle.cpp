@@ -1,6 +1,6 @@
 #include "SceneTitle.h"
 #include "../Manager/FileManager.h"
-#include "../Input/InputManager.h" // ’Ç‰Á
+#include "../Manager/Input/InputManager.h" 
 
 #include <cstring>
 
@@ -23,6 +23,12 @@ void SceneTitle::Update()
 		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) ||
 		input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::START))
 	{
+		// Œˆ’è‰¹‚ÌÄ¶
+		/*
+		if (seDecide_ && seDecide_->GetHandle() != -1) {
+			PlaySoundMem(seDecide_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		}
+		*/
 		EndScene(SceneID::STAGE_SELECT);
 	}
 }
@@ -45,8 +51,8 @@ void SceneTitle::Draw()
 	
 	drawCenterText(65, "PRESS ENTER TO START", GetColor(220, 220, 220));
 
-	DrawBox(centerX - 320, 430, centerX + 320, 650, GetColor(255, 215, 0), TRUE);
+	/*DrawBox(centerX - 320, 430, centerX + 320, 650, GetColor(255, 215, 0), TRUE);
 	DrawBox(centerX - 300, 450, centerX + 300, 630, GetColor(180, 0, 0), TRUE);
 	DrawBox(centerX - 300, 450, centerX + 300, 630, GetColor(255, 255, 255), FALSE);
-	drawCenterText(530, "PUSH START", GetColor(255, 255, 255));
+	drawCenterText(530, "PUSH START", GetColor(255, 255, 255));*/
 }

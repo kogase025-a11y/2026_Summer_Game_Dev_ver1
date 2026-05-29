@@ -2,7 +2,7 @@
 #include "FileSuper.h"
 #include <DxLib.h>
 
-class SoundFile : public FileSuper
+class SoundFile final : public FileSuper
 {
 public:
 	SoundFile(const std::string& path, int handle)
@@ -12,9 +12,35 @@ public:
 
 	~SoundFile() override
 	{
-		if (handle_ >= 0)
+		DeleteSoundMem(handle_);
+	}
+
+	void PlayLoop(int playType = DX_PLAYTYPE_LOOP) const
+	{
+		PlaySoundMem(handle_, playType);
+	}
+
+	void PlayOneShot(int playType = DX_PLAYTYPE_BACK) const
+	{
+		int frame = GetNowCount();
+		if (frame != lastPlayFrame)
 		{
-			DeleteSoundMem(handle_);
+			lastPlayFrame = frame;
+			PlaySoundMem(handle_, playType);
 		}
 	}
+
+	void Stop() const
+	{
+		StopSoundMem(handle_);
+	}
+
+	void SetVolume(int Volume) const
+	{
+		ChangeVolumeSoundMem(Volume, handle_);
+	}
+
+private:
+	// constÉÅÉ\ÉbÉhì‡Ç≈àµÇ¶ÇÈÇÊÇ§Ç…mutableÇ…Ç∑ÇÈ
+	mutable int lastPlayFrame = -1;
 };

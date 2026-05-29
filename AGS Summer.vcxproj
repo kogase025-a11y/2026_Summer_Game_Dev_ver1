@@ -138,7 +138,7 @@
     <ClCompile Include="Scene\SceneStageSelect.cpp" />
     <ClCompile Include="Util\AsoUtility.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
-    <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Manager\Input\InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Player\Player.cpp" />
@@ -151,13 +151,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Manager\BGMmanager.h" />
     <ClInclude Include="Scene\SceneSetting.h" />
     <ClInclude Include="Scene\SceneStageSelect.h" />
     <ClInclude Include="Stage\StageScript\StageScriptSuper.h" />
     <ClInclude Include="Stage\StageConfig\StageConfig.h" />
     <ClInclude Include="Util\AsoUtility.h" />
     <ClInclude Include="FPS\Fps.h" />
-    <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Manager\Input\InputManager.h" />
     <ClInclude Include="Manager\FileManager.h" />
     <ClInclude Include="Manager\ResourceManager.h" />
     <ClInclude Include="Player\Player.h" />

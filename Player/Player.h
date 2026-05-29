@@ -1,11 +1,12 @@
 #pragma once
-#include "../Input/InputManager.h"
+#include "../Manager/Input/InputManager.h"
 #include <memory>
 #include <vector>
 #include"../Util/Vector2.h"
 #include "../Util/Vector2F.h"
 #include "../Application/Application.h"
 #include "../Resource/ImageFile.h"
+#include "../Resource/SoundFile.h"
 #include "../Util/Rect.h"
 
 class FileManager;
@@ -106,6 +107,9 @@ private:
 
 	std::shared_ptr<ImageFile> particleTex;
 	std::shared_ptr<ImageFile> wetTexs[3]; // 水たまりに入った時の画像(3種類)
+	std::shared_ptr<SoundFile> jumpSe_;
+	std::shared_ptr<SoundFile> fallSe_;   // 落ちた時（着地）の音
+	std::shared_ptr<SoundFile> puddleSe_; // 水たまりに落ちた時の音
 
 	// 現在の状態
 	float positionX_ = 300.0f;
@@ -126,4 +130,5 @@ private:
 	// アニメーション用状態名
 	const char* stateName_ = "Idle";
 };
+
 

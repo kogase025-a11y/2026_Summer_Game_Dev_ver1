@@ -10,6 +10,7 @@ SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
 {
 	player_.SystemInit();
 	player_.GameInit();
+	
 
 	// Git Project  FileManager g?vC[?擾
 	// 画像が未配置でも player_.Draw 側で矩形描画にフォールバックする

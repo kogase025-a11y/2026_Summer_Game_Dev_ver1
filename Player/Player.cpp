@@ -11,7 +11,9 @@ Player::Player(Stage* stage, FileManager& fileMng) : stage_(stage), fileMng_(fil
 	 wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaperYogore.PNG");
 	 wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaperYogore2.PNG");
 	 wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaperYogore3.PNG");
-
+	 jumpSe_ = fileMng_.LoadSoundFM("Image/Sound/jump03.mp3");
+	 fallSe_ = fileMng_.LoadSoundFM("Level up! Ragnarok.mp3");
+	 puddleSe_ = fileMng_.LoadSoundFM("Image/Sound/powerdown07.mp3");
 }
 
 Player::~Player(void)
@@ -75,7 +77,9 @@ void Player::Update(const InputManager& input)
 
 	ProcessJump(input);
 
+	bool wasOnGround = onGround_;
 	Move();
+	bool landedThisFrame = (!wasOnGround && onGround_);
 
 	// êÖÇΩÇ‹ÇËìñÇΩÇËîªíË
 	isInPuddle_ = false;
@@ -94,6 +98,17 @@ void Player::Update(const InputManager& input)
 		if (dirtLevel_ < 3)
 		{
 			dirtLevel_++;
+		}
+		if (puddleSe_ && puddleSe_->GetHandle() != -1)
+		{
+			PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		}
+	}
+	else if (landedThisFrame)
+	{
+		if (fallSe_ && fallSe_->GetHandle() != -1)
+		{
+			PlaySoundMem(fallSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
 		}
 	}
 	wasInPuddle_ = isInPuddle_;
@@ -337,6 +352,11 @@ void Player::ProcessJump(const InputManager& input)
 		onGround_ = false;
 		jumpTimer_ = INPUT_JUMP_FRAME;
 		Jump(); // èâë¨Çó^Ç¶ÇÈ
+
+		if (jumpSe_ && jumpSe_->GetHandle() != -1)
+		{
+			PlaySoundMem(jumpSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		}
 	}
 	else if (!onGround_)
 	{
