@@ -72,6 +72,9 @@ public:
 	float GetX() const;
 	float GetY() const;
 
+	// ゴール音の再生
+	void PlayGoalSound();
+
 private:
 
 	SceneGame* sceneGame_;
@@ -104,11 +107,14 @@ private:
 	void Jump(void);
 	// ジャンプ力の設定
 	void SetJumpPow(float pow);
+	
 
 	std::shared_ptr<ImageFile> particleTex;
 	std::shared_ptr<ImageFile> wetTexs[3]; // 水たまりに入った時の画像(3種類)
 	std::shared_ptr<SoundFile> jumpSe_;
 	std::shared_ptr<SoundFile> fallSe_;   // 落ちた時（着地）の音
+	std::shared_ptr<SoundFile> damageSe_; // ダメージ音
+	std::shared_ptr<SoundFile> goalSe_;   // ゴール音
 	std::shared_ptr<SoundFile> puddleSe_; // 水たまりに落ちた時の音
 
 	// 現在の状態

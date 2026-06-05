@@ -2,6 +2,8 @@
 
 #include "../Manager/FileManager.h"
 #include "../Util/Rect.h"
+#include "../Manager/Input/InputManager.h"
+#include "../Player/Player.h"
 
 #include <algorithm>
 
@@ -95,6 +97,8 @@ void SceneGame::Update()
 	const Rect goalRect{ stage_.GetGoalX() - 16.0f, stage_.GetGroundY() - 180.0f, 32.0f, 180.0f };
 	if (playerRect.IsHit(goalRect))
 	{
+		player_.PlayGoalSound();
+
 		EndScene(SceneID::CLEAR);
 		return;
 	}
