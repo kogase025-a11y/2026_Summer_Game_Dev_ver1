@@ -18,4 +18,7 @@ public:
 
 private:
 	std::shared_ptr<ImageFile> clearBg_;
+	float scoreStartX_;
+	float scoreEndX_;
+	float scoreY_;
 };

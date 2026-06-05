@@ -13,6 +13,7 @@ SceneClear::SceneClear(FileManager& fileMng)
 
 void SceneClear::Update()
 {
+
 	// ENTERでタイトルへ戻る
 	auto& input = InputManager::GetInstance();
 	if (input.IsTrgDown(KEY_INPUT_RETURN) ||
@@ -39,6 +40,5 @@ void SceneClear::Draw()
 		DrawRotaGraphF(centerX, height / 2.0f, 1.5, 0.0, clearBg_->GetHandle(), TRUE);
 	}
 
-	// クリア表示（文字）が必要な場合はこのまま残します
-	DrawString(20, 110, "CLEAR: PRESS ENTER to TITLE", GetColor(0, 255, 0));
+	
 }
