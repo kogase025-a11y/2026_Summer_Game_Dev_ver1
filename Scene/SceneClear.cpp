@@ -8,8 +8,10 @@
 
 SceneClear::SceneClear(FileManager& fileMng)
 	: clearBg_(fileMng.LoadImageFM("Image/GameCliar.PNG")) // ここでクリア画面の画像を読み込みます
-{
-}
+	, scoreXStart_(700.0f) // スコアの開始X座標
+	, scoreXEnd_(1200.0f)// スコアの終了X座標
+	, scoreYTop_(540.0f)   // スコアのY座標
+{}
 
 void SceneClear::Update()
 {
@@ -31,14 +33,29 @@ void SceneClear::Draw()
 	const int height = 1080;
 	const int centerX = width / 2;
 
-	// 背景のベタ塗り
-	DrawBox(0, 0, width, height, GetColor(10, 10, 30), TRUE);
 
-	// クリア画像の描画
-	if (clearBg_ && clearBg_->GetHandle() != -1)
-	{
-		DrawRotaGraphF(centerX, height / 2.0f, 1.5, 0.0, clearBg_->GetHandle(), TRUE);
-	}
+	const int scoreleft = static_cast<int>(scoreXStart_);
+	const int scoreRight = static_cast<int>(scoreXEnd_);
+	const int scoreTop = static_cast<int>(scoreYTop_);
+	DrawBox(scoreleft, scoreTop, scoreRight, scoreTop + 100, GetColor(255, 255, 255), TRUE);
 
 	
+	
+
+	
+
+}
+
+float SceneClear::GetScoreY() const { return scoreYTop_; }
+float SceneClear::GetScoreXStart() const { return scoreXStart_; }
+float SceneClear::GetScoreXEnd() const { return scoreXEnd_; }
+float SceneClear::GetScoreYTop() const { return scoreYTop_; }
+
+float SceneClear::GetScoreYAtX(float x) const
+{
+	if (x >= scoreXStart_ && x <= scoreXEnd_)
+	{
+		return scoreYTop_;
+	}
+	return scoreYTop_;
 }

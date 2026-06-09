@@ -107,6 +107,7 @@ private:
 	void Jump(void);
 	// ジャンプ力の設定
 	void SetJumpPow(float pow);
+	//坂の高さによって速度が変わる
 	
 
 	std::shared_ptr<ImageFile> particleTex;
@@ -129,9 +130,10 @@ private:
 	bool wasInDiaty_ = false; // 前回汚れ地面にいたかのフラグ
 	int dirtLevel_ = 0;       // 汚れ段階 (0: 新品, 1?3: 汚れ)
 	int jumpTimer_ = 0;
+	int heightDiff_ = 0;
 
 	// 移動パラメータ
-	const float moveSpeed_ = 7.0f;
+	const float moveSpeed_ = 3.0f;
 	const float gravity_ = 0.65f;
 	const float jumpSpeed_ = 14.0f;
 
