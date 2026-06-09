@@ -1,21 +1,30 @@
-#include "SceneGame.h"
+#include <DxLib.h>
+#include"SceneGame.h"
 
 #include "../Manager/FileManager.h"
 #include "../Util/Rect.h"
 #include "../Manager/Input/InputManager.h"
 #include "../Player/Player.h"
+#include "../Stage/Stage.h"
+#include"../Manager/SceneManager.h"
+
+
 
 #include <algorithm>
 
 SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
 	: player_(&stage_,fileMng), fileMng_(fileMng), sceneMng_(sceneMng)
 {
+	
+	// ★【追加】シーンマネージャーから、さっき保存したステージ番号（1?3）を受け取る
+	int stageNum = sceneMng_->GetStageNum();
+
+	// ★【追加】ステージ番号に応じて、ステージの地形データを切り替える（Init関数は後で作ります）
+	stage_.Init(stageNum);
+
 	player_.SystemInit();
 	player_.GameInit();
-	
 
-	// Git Project  FileManager g?vC[?擾
-	// 画像が未配置でも player_.Draw 側で矩形描画にフォールバックする
 	playerImage_ = fileMng_.LoadImageFM(kPlayerImagePath);
 }
 
@@ -95,14 +104,23 @@ void SceneGame::Update()
 	// Git Project  Rect gS[?
 	const Rect playerRect{ player_.GetX() - 24.0f, player_.GetY() - 48.0f, 48.0f, 48.0f };
 	const Rect goalRect{ stage_.GetGoalX() - 16.0f, stage_.GetGroundY() - 180.0f, 32.0f, 180.0f };
-	if (playerRect.IsHit(goalRect))
+	if (playerRect.IsHit(goalRect) && !isGoal_)
 	{
+		isGoal_ = true;
+		goalTimer_ = 0;
+
 		player_.PlayGoalSound();
-
-		EndScene(SceneID::CLEAR);
-		return;
 	}
+	if (isGoal_)
+	{
+		goalTimer_++;
 
+		if (goalTimer_ > 120)
+		{
+			EndScene(SceneID::CLEAR);
+			return;
+		}
+	}
 	// 終了
 	if (CheckHitKey(KEY_INPUT_C) != 0)
 	{

@@ -8,6 +8,9 @@ public:
 
     void Update();
     void Draw(float cameraX, int screenWidth, int screenHeight) const;
+    // ★【追加】ステージ番号を受け取って地形を初期化する関数
+    void Init(int stageNum);
+
 
     float GetGroundY() const;
     float GetStepStartX() const;
@@ -39,6 +42,17 @@ public:
 
     
 private:
+
+    // ★【追加】1マスのサイズ（64ピクセル）
+    static const int kTileSize = 64;
+
+    // ★【追加】マップの大きさ（縦17マス × 横30マス ＝ ちょうど画面に収まるくらい）
+    static const int kMapHeight = 17;
+    static const int kMapWidth = 30;
+
+    // ★【追加】マップデータを保持する2次元配列（最初は全部0＝空気にしておく）
+    int mapData_[kMapHeight][kMapWidth] = { 0 };
+
     float groundY_;
 
     float stepStartX_;

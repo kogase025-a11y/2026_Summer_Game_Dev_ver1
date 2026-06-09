@@ -1,13 +1,17 @@
 #include "SceneStageSelect.h"
 #include "../Manager/FileManager.h"
 #include "../Manager/Input/InputManager.h"
+#include "../Manager/SceneManager.h"
 #include <DxLib.h>
 #include <math.h>
 
 const int kMaxStages = 4;
 
-SceneStageSelect::SceneStageSelect(FileManager& fileMng)
+SceneStageSelect::SceneStageSelect(FileManager& fileMng,SceneManager* sceneMng)
 {
+	sceneMng_ = sceneMng;
+
+
 	explanFontHandle = CreateFontToHandle("Arial", 40, 3, DX_FONTTYPE_ANTIALIASING);
 	offScreenHandle_ = MakeScreen(1920, 1080, TRUE);
 	live2DScreenHandle_ = -1;
@@ -209,6 +213,10 @@ void SceneStageSelect::UpdateInput()
 		}
 		else
 		{
+			
+			// ‚¿‚á‚ñ‚Æ’†g‚ª‚ ‚ê‚ÎA¡‚Ü‚Å’Ê‚è•Û‘¶‚·‚é
+			sceneMng_->SetStageNum(selectedStageIndex_);
+			
 			EndScene(SceneID::GAME);
 		}
 	}

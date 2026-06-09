@@ -107,10 +107,10 @@ void SceneManager::ChangeScene(SceneSuper::SceneID nextSceneID)
 		currentScene = std::unique_ptr<SceneSuper>(new SceneTitle(fileMng_));
 		break;
 	case SceneSuper::SceneID::STAGE_SELECT:
-		currentScene = std::unique_ptr<SceneSuper>(new SceneStageSelect(fileMng_));
+		currentScene = std::make_unique<SceneStageSelect>(fileMng_, this);
 		break;
 	case SceneSuper::SceneID::GAME:
-		currentScene = std::unique_ptr<SceneSuper>(new SceneGame(fileMng_, this));
+		currentScene = std::make_unique<SceneGame>(fileMng_, this);
 		break;
 	case SceneSuper::SceneID::CLEAR:
 		currentScene = std::unique_ptr<SceneSuper>(new SceneClear(fileMng_));

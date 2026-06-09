@@ -40,4 +40,6 @@ private:
 	// ポーズ中かどうかのフラグ
 	bool isPause_ = false;
 	int pauseCursor_ = 0; // ポーズメニューのカーソル位置(0:RESUME, 1:TITLE, 2:QUIT)
+	bool isGoal_ = false;
+	int goalTimer_ = 0;
 };

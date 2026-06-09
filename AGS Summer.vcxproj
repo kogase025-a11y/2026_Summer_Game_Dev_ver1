@@ -136,6 +136,10 @@
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Scene\SceneSetting.cpp" />
     <ClCompile Include="Scene\SceneStageSelect.cpp" />
+    <ClCompile Include="Stage\StageConfig\StageConfigTable.cpp" />
+    <ClCompile Include="Stage\StageScript\Stage3Script.cpp" />
+    <ClCompile Include="Stage\StageScript\Stage2Script.cpp" />
+    <ClCompile Include="Stage\StageScript\Stage1Script.cpp" />
     <ClCompile Include="Util\AsoUtility.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
     <ClCompile Include="Manager\Input\InputManager.cpp" />
@@ -154,6 +158,10 @@
     <ClInclude Include="Manager\BGMmanager.h" />
     <ClInclude Include="Scene\SceneSetting.h" />
     <ClInclude Include="Scene\SceneStageSelect.h" />
+    <ClInclude Include="Stage\StageConfig\StageConfigTable.h" />
+    <ClInclude Include="Stage\StageScript\Stage3Script.h" />
+    <ClInclude Include="Stage\StageScript\Stage2Script.h" />
+    <ClInclude Include="Stage\StageScript\Stage1Script.h" />
     <ClInclude Include="Stage\StageScript\StageScriptSuper.h" />
     <ClInclude Include="Stage\StageConfig\StageConfig.h" />
     <ClInclude Include="Util\AsoUtility.h" />

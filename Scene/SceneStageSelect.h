@@ -6,6 +6,8 @@
 #include "../Resource/ImageFile.h"
 #include "../Resource/SoundFile.h"
 #include "../Manager/FileManager.h"
+#include "../Manager/BGMManager.h"
+#include "../Manager/SceneManager.h"
 
 class SceneStageSelect : public SceneSuper
 {
@@ -24,7 +26,9 @@ public:
 		Down
 	};
 
-	SceneStageSelect(FileManager& fileMng);
+	
+
+	SceneStageSelect(FileManager& fileMng,SceneManager* sceneMng);
 
 	~SceneStageSelect() override;
 
@@ -38,6 +42,8 @@ private:
 	std::shared_ptr<SoundFile> bgm_;
 	std::shared_ptr<SoundFile> seCursor_;
 	std::shared_ptr<SoundFile> seDecide_;
+
+	SceneManager* sceneMng_ = nullptr;
 
 	void UpdateInput();
 	void UpdateAnimation();

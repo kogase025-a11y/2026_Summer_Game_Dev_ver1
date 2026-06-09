@@ -35,7 +35,19 @@ public:
 	bool GetExit();
 	// クリア結果を保存
 	void SetClearResult(const ClearResult& result);
+
+
+	// 外部からステージ番号を設定するための関数（セッター）
+	void SetStageNum(int num) { currentStageNum_ = num; }
+
+	// 外部からステージ番号を受け取るための関数（ゲッター）
+	int GetStageNum() const { return currentStageNum_; }
+
 private:
+
+	// SceneManager.h の中の、class SceneManager の定義内に追加
+	int currentStageNum_ = 1; // 最初はとりあえず1にしておく
+
 	// シーン生成切り替え
 	void ChangeScene(SceneSuper::SceneID nextSceneID);
 	// フェード遷移更新
