@@ -16,6 +16,19 @@ public:
 	// ‰æ–Ê•`‰æ
 	void Draw() override;
 
+	float GetScoreY()const;
+	float GetScoreXStart()const;
+	float GetScoreXEnd()const;
+	float GetScoreYTop()const;
+	float GetScoreYAtX(float x) const;
+
 private:
+	float scoreY_;
+	float scoreXStart_;
+	float scoreXEnd_;
+	float scoreYTop_;
+
+	
 	std::shared_ptr<ImageFile> clearBg_;
+	
 };

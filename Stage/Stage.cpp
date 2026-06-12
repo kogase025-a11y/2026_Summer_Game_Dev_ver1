@@ -2,6 +2,7 @@
 #include <DxLib.h>
 
 Stage::Stage()
+
     : groundY_(760.0f)
     , stepStartX_(1400.0f)
     , stepEndX_(2200.0f)
@@ -110,6 +111,11 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
 	const int slopeLeft = static_cast<int>(slopeStartX_ - cameraX);
 	const int slopeRight = static_cast<int>(slopeEndX_ - cameraX);
 	DrawTriangle(slopeLeft, groundY, slopeRight, groundY, slopeRight, groundY - 200, GetColor(110, 110, 110), TRUE);
+
+	//â‚Éæ‚Á‚½‚Æ‚«“o‚Á‚½‚çŒ¸‘¬‰º‚ª‚Á‚½‚ç‰Á‘¬‚·‚é‚æ‚¤‚É‚·‚é‚½‚ß‚Ìü
+	DrawLine(slopeLeft, groundY, slopeRight, groundY - 200, GetColor(255, 255, 0));
+   
+
     // ƒS[ƒ‹‚Ì•`‰æ
 
     const int goalDrawX = static_cast<int>(goalX_ - cameraX);
@@ -122,8 +128,7 @@ float Stage::GetGroundYAtX(float x) const
 {
     if (x >= stepStartX_ && x <= stepEndX_)
     {
-        return stepTopY_;
-    }
+        return stepTopY_;   }
     if (x >= step2StartX_ && x <= step2EndX_)
     {
         return step2TopY_;

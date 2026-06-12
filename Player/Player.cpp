@@ -294,7 +294,7 @@ void Player::Move(void)
 	const float minX = playerHalfWidth;
 	const float maxX = (std::max)(minX, clampedStageWidth - playerHalfWidth);
 	positionX_ = (std::max)(minX, (std::min)(positionX_, maxX));
-
+	
 	// ’i·‚æ‚è‰º‚É‚¢‚éŽž‚¾‚¯‘¤–ÊÕ“Ë‚ð—LŒø‚É‚·‚é
 	const float stepTopY = stage_->GetStepTopY();
 	const float stepStartX = stage_->GetStepStartX();
@@ -311,6 +311,30 @@ void Player::Move(void)
 	const float slopeStartX = stage_->GetSlopeStartX();
 	const float slopeEndX = stage_->GetSlopeEndX();
 	const float slopeTopY = stage_->GetSlopeStartY() - 200.0f;
+	
+	//â‚Éæ‚Á‚½‚Æ‚«Œ¸‘¬A‰Á‘¬‚·‚é
+	const float slopeHeightAtPlayerX = stage_->GetGroundYAtX(positionX_);
+	const float slopeHeightAtPrevX = stage_->GetGroundYAtX(prevX);
+
+	if(positionX_ >=slopeStartX && positionX_ <= slopeEndX)
+	{
+		float slopeGroundY = stage_->GetGroundYAtX(positionX_);
+		bool isOnSlope = onGround_ && (std::abs(positionY_ - slopeGroundY) < 0.1f);
+
+		if (slopeHeightAtPlayerX < positionY_ && slopeHeightAtPrevX < positionY_)
+		{
+			if (slopeHeightAtPlayerX < slopeHeightAtPrevX)
+			{
+				// â‚ð‰º‚é‚Æ‚«‚Í‰Á‘¬
+				Player::Accele(+0.05f);
+			}
+			else if (slopeHeightAtPlayerX > slopeHeightAtPrevX)
+			{
+				// â‚ð“o‚é‚Æ‚«‚ÍŒ¸‘¬
+				Player::Accele(-0.5f);
+			}
+		}
+	}
 
 	const bool isBelowStepTop = (positionY_ > stepTopY + 0.5f);
 	const bool isBelowStep2Top = (positionY_ > step2TopY + 0.5f);

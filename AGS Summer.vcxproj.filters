@@ -120,6 +120,8 @@
     <Image Include="Image\GameClear.PNG" />
     <Image Include="Image\GameOver.PNG" />
     <Image Include="Image\ToiletPaper.PNG" />
+    <Image Include="Image\GameCliar.PNG" />
+    <Image Include="Image\GameTitle.PNG" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
