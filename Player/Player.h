@@ -108,7 +108,7 @@ private:
 	// ƒWƒƒƒ“ƒv—Í‚Ìİ’è
 	void SetJumpPow(float pow);
 	//â‚Ì‚‚³‚É‚æ‚Á‚Ä‘¬“x‚ª•Ï‚í‚é
-	
+	void AcceleSlope(void);
 
 	std::shared_ptr<ImageFile> particleTex;
 	std::shared_ptr<ImageFile> wetTexs[3]; // …‚½‚Ü‚è‚É“ü‚Á‚½‚Ì‰æ‘œ(3í—Ş)
