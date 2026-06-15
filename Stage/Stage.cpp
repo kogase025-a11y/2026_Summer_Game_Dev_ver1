@@ -2,6 +2,7 @@
 #include <DxLib.h>
 
 Stage::Stage()
+
     : groundY_(760.0f)
     , stepStartX_(1400.0f)
     , stepEndX_(2200.0f)
@@ -136,6 +137,11 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
 	const int slopeLeft = static_cast<int>(slopeStartX_ - cameraX);
 	const int slopeRight = static_cast<int>(slopeEndX_ - cameraX);
 	DrawTriangle(slopeLeft, groundY, slopeRight, groundY, slopeRight, groundY - 200, GetColor(110, 110, 110), TRUE);
+
+	//ç‚Ç…èÊÇ¡ÇΩÇ∆Ç´ìoÇ¡ÇΩÇÁå∏ë¨â∫Ç™Ç¡ÇΩÇÁâ¡ë¨Ç∑ÇÈÇÊÇ§Ç…Ç∑ÇÈÇΩÇﬂÇÃê¸
+	DrawLine(slopeLeft, groundY, slopeRight, groundY - 200, GetColor(255, 255, 0));
+   
+
     // ÉSÅ[ÉãÇÃï`âÊ
 
     const int goalDrawX = static_cast<int>(goalX_ - cameraX);
@@ -188,6 +194,7 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
 
 float Stage::GetGroundYAtX(float x) const
 {
+<<<<<<< HEAD
 
 
 
@@ -208,6 +215,23 @@ float Stage::GetGroundYAtX(float x) const
 
     if (x >= slopeStartX_ && x <= slopeEndX_) {
         const float slopeHeight = 200.0f;
+=======
+    if (x >= stepStartX_ && x <= stepEndX_)
+    {
+        return stepTopY_;   }
+    if (x >= step2StartX_ && x <= step2EndX_)
+    {
+        return step2TopY_;
+    }
+    if (x >= step3StartX_ && x <= step3EndX_)
+    {
+        return step3TopY_;
+    }
+    
+    if (x >= slopeStartX_ && x <= slopeEndX_)
+    {
+        const float slopeHeight = 200.0f; // åXéŒÇÃçÇÇ≥
+>>>>>>> origin/koga
         const float slopeWidth = slopeEndX_ - slopeStartX_;
         const float slopeProgress = (x - slopeStartX_) / slopeWidth;
         return groundY_ - slopeHeight * slopeProgress;

@@ -115,7 +115,8 @@ private:
 	void Jump(void);
 	// ジャンプ力の設定
 	void SetJumpPow(float pow);
-	
+	//坂の高さによって速度が変わる
+	void AcceleSlope(void);
 
 	std::shared_ptr<ImageFile> particleTex;
 	std::shared_ptr<ImageFile> wetTexs[3]; // 水たまりに入った時の画像(3種類)
@@ -137,10 +138,14 @@ private:
 	bool wasInDiaty_ = false; // 前回汚れ地面にいたかのフラグ
 	int dirtLevel_ = 0;       // 汚れ段階 (0: 新品, 1?3: 汚れ)
 	int jumpTimer_ = 0;
+<<<<<<< HEAD
 	
+=======
+	int heightDiff_ = 0;
+>>>>>>> origin/koga
 
 	// 移動パラメータ
-	const float moveSpeed_ = 7.0f;
+	const float moveSpeed_ = 3.0f;
 	const float gravity_ = 0.65f;
 	const float jumpSpeed_ = 14.0f;
 
