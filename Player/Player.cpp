@@ -50,6 +50,8 @@ void Player::GameInit(void)
 	wasInPuddle_ = false;
 	wasInDiaty_ = false;
 	stateName_ = "Idle";
+	invincibleTimer_ = 0.0f;
+	isInvincible_ = false;
 }
 
 void Player::Update(void)
@@ -60,6 +62,7 @@ void Player::Update(void)
 void Player::Draw(void)
 {
 	// 旧インターフェース用（カメラ0・画像なしで描画）
+
 	Draw(0.0f, -1);
 }
 
@@ -78,6 +81,20 @@ void Player::Update(const InputManager& input)
 	}
 
 	ProcessJump(input);
+
+	// --- 無敵タイマーの更新 ---
+	if (invincibleTimer_ > 0) {
+		invincibleTimer_ -= (1.0f / 60.0f); // 60FPSと仮定。本来はdeltaTimeを渡すのが理想
+		if (invincibleTimer_ <= 0) {
+			invincibleTimer_ = 0;
+			isInvincible_ = false;
+		}
+	}
+
+
+
+	// ★追加：速度に合わせて回転させる（0.05fは回転スピードの調整値）
+	angle_ += velocityX_ * 0.05f;
 
 	bool wasOnGround = onGround_;
 	Move();
@@ -102,18 +119,19 @@ void Player::Update(const InputManager& input)
 	{
 		isInDiaty_ = true;
 	}
-	// 水たまりに新しく入った瞬間なら汚れ段階をアップ
+	// --- 水たまり当たり判定の修正 ---
 	if (isInPuddle_ && !wasInPuddle_)
 	{
-		if (dirtLevel_ < 3)
-		{
-			dirtLevel_++;
-		}
-		if (puddleSe_ && puddleSe_->GetHandle() != -1)
-		{
-			PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+		// 無敵中でなければ汚れを増やす
+		if (!isInvincible_) {
+			if (dirtLevel_ < 3) dirtLevel_++;
+			if (puddleSe_ && puddleSe_->GetHandle() != -1)
+				PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
 		}
 	}
+	// (isInDiaty_ の方も同様に !isInvincible_ で囲む)
+	
+	// (isInDiaty_ の方も同様に !isInvincible_ で囲む)
 	/*else if (landedThisFrame)
 	{
 		if (fallSe_ && fallSe_->GetHandle() != -1)
@@ -156,19 +174,28 @@ void Player::Update(const InputManager& input)
 
 void Player::Draw(float cameraX, int playerGraphHandle) const
 {
+	
+	// --- 無敵中は点滅させる演出 ---
+	if (isInvincible_) {
+		// 5フレームに1回描画しない（点滅）
+		if ((GetNowCount() / 100) % 2 == 0) return;
+	}
+
+
+	// 画面上の足元位置
 	const int drawX = static_cast<int>(positionX_ - cameraX);
 	const int drawY = static_cast<int>(positionY_);
 
-	
+	// ─── 【完全固定】画像の「中心の穴」を描画するY座標 ───
+	// 足元から「32ピクセル上」を画像の中心点（穴）にします。
+	const int imageCenterY = drawY - 32;
 
-	// 一度でも水たまりで汚れたら、その状態を維持して描画
+	// 1. 水たまりで汚れた時の画像を描画
 	if (dirtLevel_ > 0)
 	{
-		// 汚れ段階(1?3)に合わせて画像インデックス(0?2)にする
 		int targetIndex = dirtLevel_ - 1;
 		int animIndex = targetIndex;
-		
-		// もし指定した画像が読み込めていなければ、前の状態の画像を代わりに表示する
+
 		while (animIndex >= 0 && !wetTexs[animIndex])
 		{
 			animIndex--;
@@ -176,49 +203,28 @@ void Player::Draw(float cameraX, int playerGraphHandle) const
 
 		if (animIndex >= 0 && wetTexs[animIndex])
 		{
-			DrawRotaGraph(drawX, drawY - 24, 1.0, 0.0, wetTexs[animIndex]->GetHandle(), TRUE);
-
-#ifdef _DEBUG
-			// 読み込み失敗が分かるように上部に原因状態を描画
-			if (targetIndex != animIndex) {
-				DrawString(0, 100, "Error: missing Yogore Image!", GetColor(255, 0, 0), TRUE);
-			}
-			DrawFormatString(0, 120, GetColor(255, 255, 255), "DirtLevel: %d  TargetIndex: %d", dirtLevel_, targetIndex);
-#endif
-			return;
+			DrawRotaGraph(drawX, imageCenterY, 1.0, 0.0, wetTexs[animIndex]->GetHandle(), TRUE);
 		}
 	}
-
-	if (particleTex)
+	// 2. 通常時の画像（particleTex）を描画
+	else if (particleTex)
 	{
-		DrawRotaGraph(drawX, drawY - 24, 1.0, 0.0, particleTex->GetHandle(), TRUE);
-		return;
+		DrawRotaGraph(drawX, imageCenterY, 1.0, 0.0, particleTex->GetHandle(), TRUE);
 	}
-	
-	if (playerGraphHandle >= 0)
+	// 3. 外部からグラフィックハンドルが指定された場合
+	else if (playerGraphHandle >= 0)
 	{
-		DrawRotaGraph(drawX, drawY - (SIZE_Y / 2), 1.0, 0.0, playerGraphHandle, TRUE);
-		return;
+		DrawRotaGraph(drawX, imageCenterY, 1.0, 0.0, playerGraphHandle, TRUE);
+	}
+	// 4. 画像が何もないときの仮の青い四角
+	else
+	{
+		DrawBox(drawX - 32, drawY - 64, drawX + 32, drawY, GetColor(120, 220, 255), TRUE);
 	}
 
-	const int left = drawX - (SIZE_X / 2);
-	const int right = drawX + (SIZE_X / 2);
-	const int top = drawY - SIZE_Y;
-	const int bottom = drawY;
-	DrawBox(left, top, right, bottom, GetColor(120, 220, 255), TRUE);
-
-	// 当たり判定デバッグ描画（当たり判定の幅で赤い枠線を描画）
-#ifdef _DEBUG
-	const float playerHalfWidth = static_cast<float>(SIZE_X) / 2.0f;
-	const int debugLeft = static_cast<int>(positionX_ - playerHalfWidth - cameraX);
-	const int debugRight = static_cast<int>(positionX_ + playerHalfWidth - cameraX);
-	const int debugTop = static_cast<int>(positionY_ - SIZE_Y); // 描画の下端(bottom)は positionY_ と同じ
-	const int debugBottom = static_cast<int>(positionY_);
-
-	DrawBox(debugLeft, debugTop, debugRight, debugBottom, GetColor(255, 0, 0), FALSE); // FALSEで枠線のみ
-#endif
+	// 【当たり判定の確認】赤い枠が見たい場合はこれを残す
+	 DrawBox(drawX - 20, drawY - 64, drawX + 20, drawY, GetColor(255, 0, 0), FALSE);
 }
-
 const char* Player::GetStateName() const
 {
 	return stateName_;
@@ -284,6 +290,37 @@ void Player::Decelerate(float speed)
 // 移動(実際の座標移動)
 void Player::Move(void)
 {
+	//const float halfW = 20.0f; // 当たり判定の横幅（見た目より少し小さくするとスムーズ）
+	//const float prevX_ = positionX_; 
+
+	//// 1. 横に移動してみる
+	//positionX_ += velocityX_;
+
+	//// 2. 移動した先がブロックだったら、元の場所（prevX）に戻して速度を0にする
+	// //※足元(positionY_ - 5)と頭の上(positionY_ - 60)の2箇所でチェック
+	//if (stage_->IsBlock(positionX_ + halfW, positionY_ - 5.0f) ||
+	//	stage_->IsBlock(positionX_ + halfW, positionY_ - 60.0f) ||
+	//	stage_->IsBlock(positionX_ - halfW, positionY_ - 5.0f) ||
+	//	stage_->IsBlock(positionX_ - halfW, positionY_ - 60.0f))
+	//{
+	//	positionX_ = prevX_; // ぶつかったので戻す
+	//	velocityX_ = 0.0f;  // 速度も止める
+	//}
+
+	//// 3. 縦の移動（重力など）と着地判定（ここは今のロジックでOK）
+	//positionY_ += velocityY_;
+	//float supportY = stage_->GetGroundYAtX(positionX_);
+	//if (positionY_ >= supportY) {
+	//	positionY_ = supportY;
+	//	velocityY_ = 0.0f;
+	//	onGround_ = true;
+	//}
+	//else {
+	//	onGround_ = false;
+	//}
+
+
+
 	const float playerHalfWidth = static_cast<float>(SIZE_X) / 2.0f;
 	const float prevX = positionX_;
 	
@@ -509,4 +546,9 @@ void Player::PlayGoalSound()
 	{
 		PlaySoundMem(goalSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
 	}
+}
+void Player::StartInvincible(float seconds) 
+{
+	invincibleTimer_ = seconds;
+	isInvincible_ = true;
 }

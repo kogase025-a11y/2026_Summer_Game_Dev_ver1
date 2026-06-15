@@ -43,6 +43,13 @@ public:
 	// 外部からステージ番号を受け取るための関数（ゲッター）
 	int GetStageNum() const { return currentStageNum_; }
 
+	void SetItem1(bool flag) { hasItemStage1_ = flag; }
+	void SetItem2(bool flag) { hasItemStage2_ = flag; }
+
+	bool GetItem1() const { return hasItemStage1_; }
+	bool GetItem2() const { return hasItemStage2_; }
+
+
 private:
 
 	// SceneManager.h の中の、class SceneManager の定義内に追加
@@ -57,6 +64,10 @@ private:
 
 	// アプリ終了要求
 	bool isExit;
+
+	bool hasItemStage1_ = false; // ステージ1のアイテムを取ったか
+	bool hasItemStage2_ = false; // ステージ2のアイテムを取ったか
+
 
 	// 遷移管理データ
 	TransitionState transitionState_ = TransitionState::None;

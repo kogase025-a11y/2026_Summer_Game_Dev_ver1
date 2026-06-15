@@ -25,6 +25,26 @@ SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
 	player_.SystemInit();
 	player_.GameInit();
 
+
+	
+	stage_.Init(stageNum);
+
+	// --- アイテムの初期化 ---
+	isItemExist_ = false;
+	if (stageNum == 1 || stageNum == 2) {
+		isItemExist_ = true;
+		itemX_ = 700.0f; // とりあえず X=800 の位置に配置
+		itemY_ = stage_.GetGroundY() - 50.0f; // 地面から少し浮かす
+	}
+
+	// ★追加：ステージ3開始時にアイテムチェック
+	if (stageNum == 3) {
+		if (sceneMng_->GetItem1() && sceneMng_->GetItem2()) {
+			player_.StartInvincible(10.0f); // 10秒無敵！
+		}
+	}
+
+
 	playerImage_ = fileMng_.LoadImageFM(kPlayerImagePath);
 }
 
@@ -100,7 +120,23 @@ void SceneGame::Update()
 	const float targetCameraX = player_.GetX() - (kScreenWidth * 0.5f);
 	const float cameraMax = stage_.GetStageWidth() - static_cast<float>(kScreenWidth);
 	cameraX_ = (std::max)(0.0f, (std::min)(targetCameraX, cameraMax));
+	// --- アイテムとの当たり判定 ---
+	if (isItemExist_) {
+		// プレイヤーの当たり判定
+		Rect playerRect{ player_.GetX() - 24.0f, player_.GetY() - 48.0f, 48.0f, 48.0f };
+		// アイテムの当たり判定（32x32の範囲とする）
+		Rect itemRect{ itemX_ - 16.0f, itemY_ - 16.0f, 32.0f, 32.0f };
 
+		if (playerRect.IsHit(itemRect)) {
+			isItemExist_ = false; // アイテムを消す
+
+			// ★追加：現在のステージ番号に応じてフラグを立てる
+			int stageNum = sceneMng_->GetStageNum();
+			if (stageNum == 1) sceneMng_->SetItem1(true);
+			if (stageNum == 2) sceneMng_->SetItem2(true);
+
+		}
+	}
 	// Git Project  Rect gS[?
 	const Rect playerRect{ player_.GetX() - 24.0f, player_.GetY() - 48.0f, 48.0f, 48.0f };
 	const Rect goalRect{ stage_.GetGoalX() - 16.0f, stage_.GetGroundY() - 180.0f, 32.0f, 180.0f };
@@ -109,8 +145,11 @@ void SceneGame::Update()
 		isGoal_ = true;
 		goalTimer_ = 0;
 
+
+		
 		player_.PlayGoalSound();
 	}
+	
 	if (isGoal_)
 	{
 		goalTimer_++;
@@ -145,6 +184,25 @@ void SceneGame::Draw()
 	// UI
 	DrawFormatString(20, 20, GetColor(255, 255, 255), "STATE: %s", player_.GetStateName());
 	DrawString(20, 48, "LEFT/RIGHT: MOVE  SPACE: JUMP  C: CLEAR  ESC: PAUSE", GetColor(0, 0, 0));
+	DrawFormatString(20, 80, GetColor(255, 255, 255), "Item1: %s  Item2: %s",
+		sceneMng_->GetItem1() ? "GET!" : "NONE",
+		sceneMng_->GetItem2() ? "GET!" : "NONE");
+	// --- アイテムの描画 ---
+	if (isItemExist_) {
+		// ふわふわさせるためのオフセット計算（時間でサイン波を作る）
+		float offset = sinf(GetNowCount() / 200.0f) * 10.0f;
+
+		int drawItemX = static_cast<int>(itemX_ - cameraX_);
+		int drawItemY = static_cast<int>(itemY_ + offset);
+
+		// 黄色い円を描く（仮のアイテム）
+		DrawCircle(drawItemX, drawItemY, 20, GetColor(255, 255, 0), TRUE);
+		// 真ん中に「★」とか「ITEM」とか書いておくと分かりやすいです
+		DrawString(drawItemX - 15, drawItemY - 8, "ITEM", GetColor(0, 0, 0));
+	}
+
+
+
 
 	// ポーズ画面描画
 	if (isPause_)

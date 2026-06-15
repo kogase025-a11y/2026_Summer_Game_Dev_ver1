@@ -41,6 +41,11 @@ public:
 	static constexpr float GRAVITY = 0.25f;
 	// ジャンプ入力フレーム
 	static constexpr int INPUT_JUMP_FRAME = 6;
+	// メンバ変数に追加
+	 float invincibleTimer_ = 0.0f;
+
+	 bool isInvincible_ = false;
+
 	// アニメーション状態
 	enum class ANIM_STATE
 	{
@@ -74,6 +79,9 @@ public:
 
 	// ゴール音の再生
 	void PlayGoalSound();
+
+	// 無敵状態の開始
+	void StartInvincible(float seconds);
 
 private:
 
@@ -129,6 +137,7 @@ private:
 	bool wasInDiaty_ = false; // 前回汚れ地面にいたかのフラグ
 	int dirtLevel_ = 0;       // 汚れ段階 (0: 新品, 1?3: 汚れ)
 	int jumpTimer_ = 0;
+	
 
 	// 移動パラメータ
 	const float moveSpeed_ = 7.0f;
@@ -137,6 +146,10 @@ private:
 
 	// アニメーション用状態名
 	const char* stateName_ = "Idle";
+	// 回転の角度
+	float angle_ = 0.0f; 
+
+	
 };
 
 

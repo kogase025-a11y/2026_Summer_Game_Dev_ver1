@@ -42,4 +42,7 @@ private:
 	int pauseCursor_ = 0; // ポーズメニューのカーソル位置(0:RESUME, 1:TITLE, 2:QUIT)
 	bool isGoal_ = false;
 	int goalTimer_ = 0;
+
+	float itemX_, itemY_; // アイテムの座標
+	bool isItemExist_;    // アイテムがまだステージにあるか
 };

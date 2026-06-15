@@ -40,6 +40,9 @@ public:
     float GetDiatyStartX() const;
 	float GetDiatyEndX() const;
 
+	bool IsWall(float x, float y) const;
+
+	bool IsBlock(float x, float y) const;
     
 private:
 
