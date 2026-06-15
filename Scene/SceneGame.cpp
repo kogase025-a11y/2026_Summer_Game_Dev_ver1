@@ -20,14 +20,14 @@ SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
 	int stageNum = sceneMng_->GetStageNum();
 
 	// ★【追加】ステージ番号に応じて、ステージの地形データを切り替える（Init関数は後で作ります）
-	stage_.Init(stageNum);
+	stage_.Init(stageNum, fileMng);
 
 	player_.SystemInit();
 	player_.GameInit();
 
 
 	
-	stage_.Init(stageNum);
+	stage_.Init(stageNum, fileMng);
 
 	// --- アイテムの初期化 ---
 	isItemExist_ = false;
@@ -115,6 +115,14 @@ void SceneGame::Update()
 
 	// プレイヤー更新
 	player_.Update(InputManager::GetInstance());
+
+	// 汚れレベルが3以上になったら即座にゲームオーバーシーンへ
+	if (player_.GetDirtLevel() >= 3)
+	{
+		EndScene(SceneID::GAMEOVER);
+		return;
+	}
+
 
 	// プレイヤー中心にカメラを追従（ステージ外に出ないよう制限）
 	const float targetCameraX = player_.GetX() - (kScreenWidth * 0.5f);

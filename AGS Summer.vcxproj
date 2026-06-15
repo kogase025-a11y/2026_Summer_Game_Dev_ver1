@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Scene\SceneGameOver.cpp" />
     <ClCompile Include="Scene\SceneSetting.cpp" />
     <ClCompile Include="Scene\SceneStageSelect.cpp" />
     <ClCompile Include="Stage\StageConfig\StageConfigTable.cpp" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Manager\BGMmanager.h" />
+    <ClInclude Include="Scene\SceneGameOver.h" />
     <ClInclude Include="Scene\SceneSetting.h" />
     <ClInclude Include="Scene\SceneStageSelect.h" />
     <ClInclude Include="Stage\StageConfig\StageConfigTable.h" />

@@ -1,6 +1,6 @@
 #include "SceneClear.h"
 
-#include "SceneClear.h"
+
 #include "../Manager/FileManager.h"
 #include "../Manager/Input/InputManager.h"
 #include "../Resource/ImageFile.h"

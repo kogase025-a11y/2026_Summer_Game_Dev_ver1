@@ -1,160 +1,113 @@
 #pragma once
-#include "../Manager/Input/InputManager.h"
+
 #include <memory>
-#include <vector>
-#include"../Util/Vector2.h"
-#include "../Util/Vector2F.h"
-#include "../Application/Application.h"
+#include <string>
+#include "../Manager/Input/InputManager.h"
 #include "../Resource/ImageFile.h"
 #include "../Resource/SoundFile.h"
-#include "../Util/Rect.h"
 
+// 前方宣言
 class FileManager;
-class Vector2;
-class SceneGame;
 class Stage;
+class SceneGame;
 
-class Player
-{
+/**
+ * @brief プレイヤーキャラクターを制御するクラス
+ */
+class Player {
 public:
+    // --- 定数 (バランス調整用) ---
+    static const int SIZE_X = 96;	            // プレイヤーの横幅
+    static const int SIZE_Y = 64;	            // プレイヤーの縦幅
+    static constexpr float ANIM_SPEED = 0.1f;   // アニメーション速度
+    static constexpr float MAX_MOVE_SPEED = 10.5f; // 最大移動速度
+    static constexpr float MOVE_ACC = 0.25f;    // 移動加速度
+    static constexpr float MOVE_DEC = 0.05f;    // 移動減速度
+    static constexpr float MAX_JUMP_POW = 8.0f; // ジャンプ初速度
+    static constexpr float GRAVITY = 0.25f;     // 重力
+    static constexpr int   INPUT_JUMP_FRAME = 6; // ジャンプ入力の猶予(大ジャンプ用)
 
-	static const int SIZE_X = 96;	// 横サイズ
-	static const int SIZE_Y = 64;	// 縦サイズ
+    // アニメーション状態の定義
+    enum class ANIM_STATE { IDLE, RUN, JUMP, DAMAGED, MAX };
 
-	// 最大アニメーション数(走るモーションのみ)
-	//static const int MAX_NUM_ANIM = 4;
+public:
+    // --- コンストラクタ / デストラクタ ---
+    Player(Stage* stage, FileManager& fileMng);
+    ~Player();
 
-	// アニメーションスピード
-	static constexpr float ANIM_SPEED = 0.1f;
+    // --- 初期化・解放 ---
+    bool SystemInit(); // システム的な初期化
+    void GameInit();   // ゲーム開始時のリセット処理
+    bool Release();    // リソース解放
 
-	// 移動速度の最大値
-	static constexpr float MAX_MOVE_SPEED = 10.5f;
+    // --- 更新・描画 ---
+    void Update();                          // (旧インターフェース用)
+    void Update(const InputManager& input); // メイン更新処理
+    void Draw();                            // (旧インターフェース用)
+    void Draw(float cameraX, int playerGraphHandle) const; // メイン描画処理
 
-	// 加速(accelerator=アクセレレーター)
-	static constexpr float MOVE_ACC = 0.25f;
+    // --- 外部アクセッサ ---
+    const char* GetStateName() const;
+    float GetX() const;
+    float GetY() const;
+    int   GetDirtLevel() const { return dirtLevel_; }
 
-	// 減速(decelerate=ディセラレイト)
-	static constexpr float MOVE_DEC = 0.05f;
-	// ジャンプの最大速度
-	static constexpr float MAX_JUMP_POW = 8.0f;
-	//重力
-	static constexpr float GRAVITY = 0.25f;
-	// ジャンプ入力フレーム
-	static constexpr int INPUT_JUMP_FRAME = 6;
-	// メンバ変数に追加
-	 float invincibleTimer_ = 0.0f;
-
-	 bool isInvincible_ = false;
-
-	// アニメーション状態
-	enum class ANIM_STATE
-	{
-		IDLE,
-		RUN,
-		JUMP,
-		DAMAGED,
-		MAX
-	};
-	
-
-	
-	// 生成・破棄
-	Player(Stage* stage, FileManager& fileMng);
-	~Player(void);
-	// 初期化・解放
-	bool SystemInit(void);
-	void GameInit(void);
-	void Update(void);
-	void Draw(void);
-	bool Release(void);
-
-	// 入力付き更新・カメラ付き描画
-	void Update(const InputManager& input);
-	void Draw(float cameraX, int playerGraphHandle) const;
-
-	// 状態/位置取得
-	const char* GetStateName() const;
-	float GetX() const;
-	float GetY() const;
-
-	// ゴール音の再生
-	void PlayGoalSound();
-
-	// 無敵状態の開始
-	void StartInvincible(float seconds);
+    // --- 特殊アクション ---
+    void PlayGoalSound();           // ゴールSE再生
+    void StartInvincible(float sec); // 無敵状態の開始
 
 private:
+    // --- 内部更新用サブ関数 (Updateから分割) ---
+    void ProcessMove(const InputManager& input); // 左右移動入力
+    void ProcessJump(const InputManager& input); // ジャンプ入力
+    void UpdateInvincibleTimer();                // 無敵タイマー更新
+    void UpdateStateName(const InputManager& input); // 状態名の更新
+    void CheckTerrainCollision();                // 地形(水たまり等)判定
 
-	SceneGame* sceneGame_;
-	FileManager& fileMng_;
-	Stage* stage_;
+    // 段差衝突判定の共通処理
+    void CheckStepCollision(float sStart, float sEnd, float sTop, float pHalf, float prevX);
 
-	// 座標
-	Vector2F pos_;
+    // --- 物理計算系 ---
+    void Move();               // 実際の座標計算と壁判定
+    void Accele(float speed);  // 加速
+    void Decelerate(float spd);// 減速
+    void AddGravity();         // 重力加算
+    void Jump();               // ジャンプ実行
+    void SetJumpPow(float pow);// 上昇速度設定
 
-	// アニメーション状態
-	ANIM_STATE animState_;
+private:
+    // 依存ポインタ
+    SceneGame* sceneGame_;
+    FileManager& fileMng_;
+    Stage* stage_;
 
+    // 座標・物理量
+    float positionX_ = 300.0f;
+    float positionY_ = 760.0f;
+    float velocityX_ = 0.0f;
+    float velocityY_ = 0.0f;
+    float angle_ = 0.0f; // 転がる回転角
 
-	// プレイヤーの移動操作
-	void ProcessMove(const InputManager& input);
+    // フラグ・タイマー類
+    bool onGround_ = true;
+    bool isInPuddle_ = false; // 水たまり中か
+    bool wasInPuddle_ = false; // 前フレーム水たまりか
+    bool isInDiaty_ = false; // 汚れ地面中か
+    bool wasInDiaty_ = false; // 前フレーム汚れ地面か
+    int  dirtLevel_ = 0;     // 汚れ段階(0~3)
+    int  jumpTimer_ = 0;     // ジャンプ継続タイマー
 
-	// 加速(スピードを加える)
-	void Accele(float speed);
+    float invincibleTimer_ = 0.0f; // 無敵残り時間
+    bool  isInvincible_ = false; // 無敵フラグ
 
-	// 減速(ディセラレイト)
-	void Decelerate(float speed);
+    // リソースハンドル
+    std::shared_ptr<ImageFile> particleTex;
+    std::shared_ptr<ImageFile> wetTexs[3];
+    std::shared_ptr<SoundFile> jumpSe_;
+    std::shared_ptr<SoundFile> fallSe_;
+    std::shared_ptr<SoundFile> damageSe_;
+    std::shared_ptr<SoundFile> goalSe_;
+    std::shared_ptr<SoundFile> puddleSe_;
 
-	// 移動(実際の座標移動)
-	void Move(void);
-	// 重力をかける
-	void AddGravity(void);
-	// プレイヤーのジャンプ操作
-	void ProcessJump(const InputManager& input);
-	// ジャンプ
-	void Jump(void);
-	// ジャンプ力の設定
-	void SetJumpPow(float pow);
-	//坂の高さによって速度が変わる
-	void AcceleSlope(void);
-
-	std::shared_ptr<ImageFile> particleTex;
-	std::shared_ptr<ImageFile> wetTexs[3]; // 水たまりに入った時の画像(3種類)
-	std::shared_ptr<SoundFile> jumpSe_;
-	std::shared_ptr<SoundFile> fallSe_;   // 落ちた時（着地）の音
-	std::shared_ptr<SoundFile> damageSe_; // ダメージ音
-	std::shared_ptr<SoundFile> goalSe_;   // ゴール音
-	std::shared_ptr<SoundFile> puddleSe_; // 水たまりに落ちた時の音
-
-	// 現在の状態
-	float positionX_ = 300.0f;
-	float positionY_ = 760.0f;
-	float velocityX_ = 0.0f;
-	float velocityY_ = 0.0f;
-	bool onGround_ = true;
-	bool isInPuddle_ = false; // 水たまり判定フラグ
-	bool wasInPuddle_ = false; // 前回水たまりにいたかのフラグ
-	bool isInDiaty_ = false; // 汚れ地面判定フラグ
-	bool wasInDiaty_ = false; // 前回汚れ地面にいたかのフラグ
-	int dirtLevel_ = 0;       // 汚れ段階 (0: 新品, 1?3: 汚れ)
-	int jumpTimer_ = 0;
-<<<<<<< HEAD
-	
-=======
-	int heightDiff_ = 0;
->>>>>>> origin/koga
-
-	// 移動パラメータ
-	const float moveSpeed_ = 3.0f;
-	const float gravity_ = 0.65f;
-	const float jumpSpeed_ = 14.0f;
-
-	// アニメーション用状態名
-	const char* stateName_ = "Idle";
-	// 回転の角度
-	float angle_ = 0.0f; 
-
-	
+    const char* stateName_ = "Idle";
 };
-
-
