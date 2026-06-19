@@ -26,6 +26,7 @@
     <ClCompile Include="Stage\StageScript\Stage2Script.cpp" />
     <ClCompile Include="Stage\StageScript\Stage3Script.cpp" />
     <ClCompile Include="Stage\StageConfig\StageConfigTable.cpp" />
+    <ClCompile Include="Scene\SceneGameOver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h">
@@ -115,6 +116,12 @@
     <ClInclude Include="Stage\StageConfig\StageConfigTable.h">
       <Filter>�w�b�_�[ �t�%40�C��</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\SceneGameOver.h">
+      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\GimmickSuper.h">
+      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Image\GameClear.PNG" />
@@ -122,13 +129,79 @@
     <Image Include="Image\ToiletPaper.PNG" />
     <Image Include="Image\GameCliar.PNG" />
     <Image Include="Image\GameTitle.PNG" />
+    <Image Include="Image\Baketu.png" />
+    <Image Include="Image\block_rock.png" />
+    <Image Include="Image\Enji.chaild.png" />
+    <Image Include="Image\GoalMan.png" />
+    <Image Include="Image\Jyaguti .png" />
+    <Image Include="Image\mizu.png" />
+    <Image Include="Image\mizu2.png" />
+    <Image Include="Image\mizushibuki (1).png" />
+    <Image Include="Image\Mizushibuki.png" />
+    <Image Include="Image\mizushibuki2.png" />
+    <Image Include="Image\Score.png" />
+    <Image Include="Image\toileroom.png" />
+    <Image Include="Image\toilet_animation.png" />
+    <Image Include="Image\toiletpaper2.png" />
+    <Image Include="Image\toiletpaper3.png" />
+    <Image Include="Image\toiletpaper4.png" />
+    <Image Include="Image\ToiletPaperYogore.PNG" />
+    <Image Include="Image\ToiletPaperYogore2.PNG" />
+    <Image Include="Image\ToiletPaperYogore3.PNG" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+    <None Include="x64\Debug\AGS Summer.exe" />
+    <None Include="x64\Debug\AGS Summer.exe.recipe" />
+    <None Include="x64\Debug\AGS Summer.ilk" />
+    <None Include="x64\Debug\AGS Summer.pdb" />
+    <None Include="x64\Debug\vc143.idb" />
+    <None Include="x64\Debug\vc143.pdb" />
+    <None Include="x64\Debug\AGS Summer.tlog\AGS Summer.lastbuildstate" />
+    <None Include="x64\Debug\AGS Summer.tlog\CL.command.1.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\Cl.items.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\CL.read.1.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\CL.write.1.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\link.command.1.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\link.read.1.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\link.secondary.1.tlog" />
+    <None Include="x64\Debug\AGS Summer.tlog\link.write.1.tlog" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.txt" />
     <Text Include="mylog.txt" />
+    <Text Include="x64\Debug\AGS Summer.log" />
+    <Text Include="x64\Debug\AGS Summer.vcxproj.FileListAbsolute.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Image\sound\jump03.mp3" />
+    <Media Include="Image\sound\Level up! Ragnarok.mp3" />
+    <Media Include="Image\sound\powerdown07.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="x64\Debug\Application.obj" />
+    <Object Include="x64\Debug\AsoUtility.obj" />
+    <Object Include="x64\Debug\Camera.obj" />
+    <Object Include="x64\Debug\Fade.obj" />
+    <Object Include="x64\Debug\Fps.obj" />
+    <Object Include="x64\Debug\GameData.obj" />
+    <Object Include="x64\Debug\InputManager.obj" />
+    <Object Include="x64\Debug\main.obj" />
+    <Object Include="x64\Debug\Player.obj" />
+    <Object Include="x64\Debug\SceneClear.obj" />
+    <Object Include="x64\Debug\SceneGame.obj" />
+    <Object Include="x64\Debug\SceneGameOver.obj" />
+    <Object Include="x64\Debug\SceneManager.obj" />
+    <Object Include="x64\Debug\SceneSetting.obj" />
+    <Object Include="x64\Debug\SceneStageSelect.obj" />
+    <Object Include="x64\Debug\SceneTitle.obj" />
+    <Object Include="x64\Debug\Stage.obj" />
+    <Object Include="x64\Debug\Stage1Script.obj" />
+    <Object Include="x64\Debug\Stage2Script.obj" />
+    <Object Include="x64\Debug\Stage3Script.obj" />
+    <Object Include="x64\Debug\StageConfigTable.obj" />
+    <Object Include="x64\Debug\Vector2F.obj" />
+    <Object Include="x64\Debug\ソース.obj" />
   </ItemGroup>
 </Project>
