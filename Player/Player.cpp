@@ -10,7 +10,7 @@
 Player::Player(Stage* stage, FileManager& fileMng)
     : stage_(stage), fileMng_(fileMng), sceneGame_(nullptr)
 {
-    particleTex = fileMng_.LoadImageFM("Image/ToiletPaper.png.png");
+    particleTex = fileMng_.LoadImageFM("Image/ToiletPaper.png");
     wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaper2.png.png");
     wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaper3.png.png");
     wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaper4.png.png");

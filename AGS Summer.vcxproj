@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -206,6 +206,79 @@
     <ClInclude Include="Util\Vector2.h" />
     <ClInclude Include="Util\Vector2F.h" />
   </ItemGroup>
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+    <Image Include="Image\Baketu.png" />
+    <Image Include="Image\block_rock.png" />
+    <Image Include="Image\Enji.chaild.png" />
+    <Image Include="Image\GameClear.PNG" />
+    <Image Include="Image\GameCliar.PNG" />
+    <Image Include="Image\GameOver.PNG" />
+    <Image Include="Image\GameTitle.PNG" />
+    <Image Include="Image\GoalMan.png" />
+    <Image Include="Image\Haneterumizu.png" />
+    <Image Include="Image\Jyaguti .png" />
+    <Image Include="Image\mizu.png" />
+    <Image Include="Image\mizu2.png" />
+    <Image Include="Image\mizushibuki (1).png" />
+    <Image Include="Image\Mizushibuki.png" />
+    <Image Include="Image\mizushibuki2.png" />
+    <Image Include="Image\Score.png" />
+    <Image Include="Image\toileroom.png" />
+    <Image Include="Image\ToiletPaper.PNG" />
+    <Image Include="Image\Toiletpaper.png.png" />
+    <Image Include="Image\toiletpaper2.png" />
+    <Image Include="Image\Toiletpaper2.png.png" />
+    <Image Include="Image\toiletpaper3.png" />
+    <Image Include="Image\Toiletpaper3.png.png" />
+    <Image Include="Image\toiletpaper4.png" />
+    <Image Include="Image\Toiletpaper4.png.png" />
+    <Image Include="Image\ToiletPaperYogore.PNG" />
+    <Image Include="Image\ToiletPaperYogore2.PNG" />
+    <Image Include="Image\ToiletPaperYogore3.PNG" />
+    <Image Include="Image\toilet_animation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Log.txt" />
+    <Text Include="mylog.txt" />
+    <Text Include="x64\Debug\AGS Summer.Build.CppClean.log" />
+    <Text Include="x64\Debug\AGS Summer.log" />
+    <Text Include="x64\Debug\AGS Summer.vcxproj.FileListAbsolute.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Image\sound\jump03.mp3" />
+    <Media Include="Image\sound\Level up! Ragnarok.mp3" />
+    <Media Include="Image\sound\powerdown07.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="x64\Debug\Application.obj" />
+    <Object Include="x64\Debug\AsoUtility.obj" />
+    <Object Include="x64\Debug\Fade.obj" />
+    <Object Include="x64\Debug\Fps.obj" />
+    <Object Include="x64\Debug\GimmickWaterDrop.obj" />
+    <Object Include="x64\Debug\InputManager.obj" />
+    <Object Include="x64\Debug\main.obj" />
+    <Object Include="x64\Debug\Player.obj" />
+    <Object Include="x64\Debug\SceneClear.obj" />
+    <Object Include="x64\Debug\SceneGame.obj" />
+    <Object Include="x64\Debug\SceneGameOver.obj" />
+    <Object Include="x64\Debug\SceneManager.obj" />
+    <Object Include="x64\Debug\SceneSetting.obj" />
+    <Object Include="x64\Debug\SceneStageSelect.obj" />
+    <Object Include="x64\Debug\SceneTitle.obj" />
+    <Object Include="x64\Debug\Stage.obj" />
+    <Object Include="x64\Debug\Stage1Script.obj" />
+    <Object Include="x64\Debug\Stage2Script.obj" />
+    <Object Include="x64\Debug\Stage3Script.obj" />
+    <Object Include="x64\Debug\StageConfigTable.obj" />
+    <Object Include="x64\Debug\Vector2F.obj" />
+  </ItemGroup>
+>>>>>>> matuoka
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
