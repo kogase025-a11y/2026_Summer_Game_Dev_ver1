@@ -33,9 +33,9 @@ public:
     float GetStepStartX() const; float GetStepEndX() const; float GetStepTopY() const;
     float GetStep2StartX() const; float GetStep2EndX() const; float GetStep2TopY() const;
     float GetStep3StartX() const; float GetStep3EndX() const; float GetStep3TopY() const;
-    float GetSlopeStartX() const; float GetSlopeEndX() const; float GetSlopeStartY() const;
     float GetPuddleStartX() const; float GetPuddleEndX() const;
-    float GetDiatyStartX() const; float GetDiatyEndX() const;
+    float GetDirtyStartX() const; float GetDirtyEndX() const;
+	float GetBaketuStartX() const; float GetBaketuEndX() const;
 
 private:
     // --- 定数 ---
@@ -56,8 +56,10 @@ private:
     float step3StartX_, step3EndX_, step3TopY_; // 段差3
     float slopeStartX_, slopeEndX_;             // 坂道
     float puddleStartX_, puddleEndX_;           // 水たまり
-    float diatyStartX_, diatyEndX_;            // 汚れ地面
-
+    float dirtyStartX_, dirtyEndX_;            // 汚れ地面
+	float baketuStartX_, baketuEndX_;          // バケツ
     // リソース
     std::shared_ptr<ImageFile> goalTex_;
+	std::shared_ptr<ImageFile> stepTex_;
+
 };

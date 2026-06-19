@@ -92,8 +92,8 @@ private:
     bool onGround_ = true;
     bool isInPuddle_ = false; // 水たまり中か
     bool wasInPuddle_ = false; // 前フレーム水たまりか
-    bool isInDiaty_ = false; // 汚れ地面中か
-    bool wasInDiaty_ = false; // 前フレーム汚れ地面か
+    bool isInDirty_ = false; // 汚れ地面中か
+    bool wasInDirty_ = false; // 前フレーム汚れ地面か
     int  dirtLevel_ = 0;     // 汚れ段階(0~3)
     int  jumpTimer_ = 0;     // ジャンプ継続タイマー
 

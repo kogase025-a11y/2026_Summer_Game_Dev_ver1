@@ -11,8 +11,9 @@ Stage::Stage()
     , goalX_(4700.0f)
     , stageWidth_(5000.0f)
     , puddleStartX_(800.0f), puddleEndX_(1200.0f)
-    , diatyStartX_(3000.0f), diatyEndX_(3600.0f)
-    , slopeStartX_(4000.0f), slopeEndX_(4500.0f)
+    , dirtyStartX_(3000.0f), dirtyEndX_(3600.0f)
+	, baketuStartX_(1000.0f), baketuEndX_(1400.0f)
+    
 {
 }
 
@@ -85,8 +86,8 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
     const int pRight = static_cast<int>(puddleEndX_ - cameraX);
     DrawBox(pLeft, groundY, pRight, groundY + 20, GetColor(50, 50, 200), TRUE);
 
-    const int dLeft = static_cast<int>(diatyStartX_ - cameraX);
-    const int dRight = static_cast<int>(diatyEndX_ - cameraX);
+    const int dLeft = static_cast<int>(dirtyStartX_ - cameraX);
+    const int dRight = static_cast<int>(dirtyEndX_ - cameraX);
     DrawBox(dLeft, groundY, dRight, groundY + 20, GetColor(50, 50, 200), TRUE);
 
     // 3. 段差の描画 (1, 2, 3)
@@ -99,12 +100,8 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
     DrawStep(step2StartX_, step2EndX_, step2TopY_, gray);
     DrawStep(step3StartX_, step3EndX_, step3TopY_, gray);
 
-    // 4. 坂道の描画
-    const int slopeL = static_cast<int>(slopeStartX_ - cameraX);
-    const int slopeR = static_cast<int>(slopeEndX_ - cameraX);
-    DrawTriangle(slopeL, groundY, slopeR, groundY, slopeR, groundY - 200, gray, TRUE);
-    // 判定確認用の線
-    DrawLine(slopeL, groundY, slopeR, groundY - 200, GetColor(255, 255, 0));
+   
+    
 
     // 5. ゴールの描画
     if (goalTex_) {
@@ -155,13 +152,7 @@ float Stage::GetGroundYAtX(float x) const
     if (x >= step2StartX_ && x <= step2EndX_) return step2TopY_;
     if (x >= step3StartX_ && x <= step3EndX_) return step3TopY_;
 
-    // 2. 坂道チェック
-    if (x >= slopeStartX_ && x <= slopeEndX_) {
-        const float slopeHeight = 200.0f;
-        const float slopeWidth = slopeEndX_ - slopeStartX_;
-        const float slopeProgress = (x - slopeStartX_) / slopeWidth;
-        return groundY_ - slopeHeight * slopeProgress;
-    }
+    
 
     return groundY_;
 }
@@ -193,12 +184,10 @@ float Stage::GetStep2TopY() const { return step2TopY_; }
 float Stage::GetStep3StartX() const { return step3StartX_; }
 float Stage::GetStep3EndX() const { return step3EndX_; }
 float Stage::GetStep3TopY() const { return step3TopY_; }
-float Stage::GetSlopeStartX() const { return slopeStartX_; }
-float Stage::GetSlopeEndX() const { return slopeEndX_; }
-float Stage::GetSlopeStartY() const { return groundY_; }
+
 float Stage::GetGoalX() const { return goalX_; }
 float Stage::GetStageWidth() const { return stageWidth_; }
 float Stage::GetPuddleStartX() const { return puddleStartX_; }
 float Stage::GetPuddleEndX() const { return puddleEndX_; }
-float Stage::GetDiatyStartX() const { return diatyStartX_; }
-float Stage::GetDiatyEndX() const { return diatyEndX_; }
+float Stage::GetDirtyStartX() const { return dirtyStartX_; }
+float Stage::GetDirtyEndX() const { return dirtyEndX_; }

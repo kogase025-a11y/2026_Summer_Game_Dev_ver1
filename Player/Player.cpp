@@ -29,7 +29,7 @@ bool Player::SystemInit() {
     onGround_ = true;
     jumpTimer_ = 0;
     dirtLevel_ = 0;
-    wasInDiaty_ = false;
+    wasInDirty_ = false;
     wasInPuddle_ = false;
     stateName_ = "Idle";
     return true;
@@ -45,7 +45,7 @@ void Player::GameInit() {
     jumpTimer_ = 0;
     dirtLevel_ = 0;
     wasInPuddle_ = false;
-    wasInDiaty_ = false;
+    wasInDirty_ = false;
     stateName_ = "Idle";
     invincibleTimer_ = 0.0f;
     isInvincible_ = false;
@@ -68,7 +68,7 @@ void Player::Update(const InputManager& input) {
     UpdateInvincibleTimer();
 
     // 3. 回転演出（速度に比例して転がる角度を更新）
-    angle_ += velocityX_ * 0.05f;
+    angle_ += velocityX_ * 0.03f;
 
     // 4. 移動実行
     bool wasOnGround = onGround_;
@@ -101,10 +101,10 @@ void Player::Update(const InputManager& input) {
     wasInPuddle_ = isInPuddle_;
 
     // 7. 汚れ地面ヒット時の処理
-    if (isInDiaty_ && !wasInDiaty_) {
+    if (isInDirty_ && !wasInDirty_) {
         if (dirtLevel_ < 3) dirtLevel_++;
     }
-    wasInDiaty_ = isInDiaty_;
+    wasInDirty_ = isInDirty_;
 
     // 8. 状態名の更新
     UpdateStateName(input);
@@ -118,14 +118,14 @@ void Player::CheckTerrainCollision() {
     const float puddleStart = stage_->GetPuddleStartX();
     const float puddleEnd = stage_->GetPuddleEndX();
 
-    isInDiaty_ = false;
-    const float diatyStart = stage_->GetDiatyStartX();
-    const float diatyEnd = stage_->GetDiatyEndX();
+    isInDirty_ = false;
+    const float dirtyStart = stage_->GetDirtyStartX();
+    const float dirtyEnd = stage_->GetDirtyEndX();
 
     // 地面にいて、X座標が範囲内なら「中」とみなす
     if (onGround_ && (positionY_ == stage_->GetGroundY())) {
         if (positionX_ >= puddleStart && positionX_ <= puddleEnd) isInPuddle_ = true;
-        if (positionX_ >= diatyStart && positionX_ <= diatyEnd) isInDiaty_ = true;
+        if (positionX_ >= dirtyStart && positionX_ <= dirtyEnd) isInDirty_   = true;
     }
 }
 
@@ -225,31 +225,14 @@ void Player::Move(void) {
     if (positionX_ < minX) positionX_ = minX;
     if (positionX_ > maxX) positionX_ = maxX;
 
-    // 坂道による影響
-    const float slpStartX = stage_->GetSlopeStartX();
-    const float slpEndX = stage_->GetSlopeEndX();
-    if (positionX_ >= slpStartX && positionX_ <= slpEndX) {
-        float hNow = stage_->GetGroundYAtX(positionX_);
-        float hPrev = stage_->GetGroundYAtX(prevX);
-        if (hNow < positionY_ && hPrev < positionY_) {
-            if (hNow < hPrev)      Accele(0.05f); // 下り加速
-            else if (hNow > hPrev) Accele(-0.5f); // 上り減速
-        }
-    }
+   
 
     // 段差の衝突判定（3つ分）
     CheckStepCollision(stage_->GetStepStartX(), stage_->GetStepEndX(), stage_->GetStepTopY(), playerHalfWidth, prevX);
     CheckStepCollision(stage_->GetStep2StartX(), stage_->GetStep2EndX(), stage_->GetStep2TopY(), playerHalfWidth, prevX);
     CheckStepCollision(stage_->GetStep3StartX(), stage_->GetStep3EndX(), stage_->GetStep3TopY(), playerHalfWidth, prevX);
 
-    // 坂道の右端（絶壁）判定
-    float slpTopY = stage_->GetSlopeStartY() - 200.0f;
-    if (positionY_ > slpTopY + 0.5f) {
-        if (positionX_ - playerHalfWidth < slpEndX && prevX - playerHalfWidth >= slpEndX) {
-            positionX_ = slpEndX + playerHalfWidth;
-            velocityX_ = 0.0f;
-        }
-    }
+   
 
     // 足元の高さ計算（プレイヤーの幅の範囲で最も高い場所を探す）
     const float sYMid = stage_->GetGroundYAtX(positionX_);
