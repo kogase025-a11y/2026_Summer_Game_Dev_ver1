@@ -81,16 +81,22 @@ Rect GimmickWater::GetHitBox() const
 }
 void GimmickWater::OnTouch(Player& player, float deltaTime)
 {
-    if (!isVisible_) return;
+    // すでに落下中でない（消えている）なら何もしない
+    if (!isFalling_) return;
 
-    // wasTouchingはGimmickSuperにある変数。これを使って1回だけ当たるようにする
-    if (!wasTouching)
-    {
-        // プレイヤー側で汚れを増やす処理を呼ぶ（前回のPlayerクラスならdirtLevel_を操作する関数）
-        // 例: player.AddDirt();
+    // wasTouching を使って、その水滴との最初の接触だけ判定する
+    if (!wasTouching) {
+        // プレイヤーを汚す
+        player.AddDirt();
 
-        isVisible_ = false; // 当たったら水滴は消える
-        timer_ = interval_;  // タイマーをリセット
+        // 【重要】当たったら水滴を消す（待機状態に戻す）
+        isFalling_ = false;
+        timer_ = interval_; // 次に落ちるまでの待ち時間をリセット
+
+        // 接触フラグを立てる
         wasTouching = true;
+
+        // もし水滴が当たった時の専用SEがあればここで鳴らす
+        // PlaySoundMem(waterHitSe, DX_PLAYTYPE_BACK);
     }
 }

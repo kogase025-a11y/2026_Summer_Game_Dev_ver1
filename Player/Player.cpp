@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Stage/Stage.h"
 #include "../Manager/FileManager.h"
+#include "../Scene/SceneGame.h"
 #include <DxLib.h>
 #include <algorithm>
 #include <cmath>
@@ -59,6 +60,10 @@ void Player::Update() { /* 旧インターフェース(未使用) */ }
  * 毎フレームの更新メイン処理
  */
 void Player::Update(const InputManager& input) {
+
+
+   
+
     // 1. 入力による移動・ジャンプ
     ProcessMove(input);
     if (!onGround_) AddGravity();
@@ -78,14 +83,14 @@ void Player::Update(const InputManager& input) {
     // 5. 特殊地形判定
     CheckTerrainCollision();
 
-    // 6. 水たまりヒット時の処理
-    if (isInPuddle_ && !wasInPuddle_) {
-        if (!isInvincible_) {
-            if (dirtLevel_ < 3) dirtLevel_++;
-            if (puddleSe_ && puddleSe_->GetHandle() != -1)
-                PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
-        }
-    }
+    //// 6. 水たまりヒット時の処理
+    //if (isInPuddle_ && !wasInPuddle_) {
+    //    if (!isInvincible_) {
+    //        if (dirtLevel_ < 3) dirtLevel_++;
+    //        if (puddleSe_ && puddleSe_->GetHandle() != -1)
+    //            PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
+    //    }
+    //}
 
     // (isInDiaty_ の方も同様に !isInvincible_ で囲む)
     /*
@@ -98,7 +103,7 @@ void Player::Update(const InputManager& input) {
         }
     }
     */
-    wasInPuddle_ = isInPuddle_;
+   /* wasInPuddle_ = isInPuddle_;*/
 
     // 7. 汚れ地面ヒット時の処理
     if (isInDirty_ && !wasInDirty_) {
@@ -323,6 +328,7 @@ void Player::ProcessJump(const InputManager& input) {
         }
     }
 }
+
 
 void Player::Jump() { SetJumpPow(MAX_JUMP_POW); }
 void Player::SetJumpPow(float pow) { velocityY_ = -pow; 

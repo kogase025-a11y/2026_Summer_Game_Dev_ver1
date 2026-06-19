@@ -5,6 +5,8 @@
 #include "../Manager/Input/InputManager.h"
 #include "../Resource/ImageFile.h"
 #include "../Resource/SoundFile.h"
+#include <DxLib.h>
+#include"../Util/Rect.h"
 
 // 前方宣言
 class FileManager;
@@ -51,11 +53,32 @@ public:
     float GetX() const;
     float GetY() const;
     int   GetDirtLevel() const { return dirtLevel_; }
+	
 
     // --- 特殊アクション ---
     void PlayGoalSound();           // ゴールSE再生
     void StartInvincible(float sec); // 無敵状態の開始
 
+    //void AddDirt();                 // 汚れを1段階上げる
+
+   
+    // ★これを追加（自分の当たり判定の箱を作る）
+    Rect GetHitBox() const {
+        Rect r;
+        r.x = positionX_ - 24.0f;
+        r.y = positionY_ - 60.0f;
+        r.w = 48.0f;
+        r.h = 60.0f;
+        return r;
+    }
+    // ★これを追加（ギミックから「汚せ！」と言われた時に実行する）
+    void AddDirt() {
+        if (!isInvincible_ && dirtLevel_ < 3) {
+            dirtLevel_++;
+            // もし Player.cpp で puddleSe_ をロードしているなら、ここで鳴らせます
+            // PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK);
+        }
+    }
 private:
     // --- 内部更新用サブ関数 (Updateから分割) ---
     void ProcessMove(const InputManager& input); // 左右移動入力
@@ -63,6 +86,7 @@ private:
     void UpdateInvincibleTimer();                // 無敵タイマー更新
     void UpdateStateName(const InputManager& input); // 状態名の更新
     void CheckTerrainCollision();                // 地形(水たまり等)判定
+	 
     //void ApplyDirt(); // 汚れを1段階上げ、無敵なら無視する処理
 
     // 段差衝突判定の共通処理

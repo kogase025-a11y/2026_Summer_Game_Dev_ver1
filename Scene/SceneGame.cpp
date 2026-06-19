@@ -7,6 +7,8 @@
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
 #include"../Manager/SceneManager.h"
+#include "../Gimmick/GimmickPuddle.h"
+#include "../Gimmick/GimmickWaterDrop.h" 
 
 
 
@@ -16,6 +18,16 @@ SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
 	: player_(&stage_,fileMng), fileMng_(fileMng), sceneMng_(sceneMng)
 {
 	
+
+	// --- ギミック用の画像をロード ---
+	auto waterTex = fileMng_.LoadImageFM("Image/Water.PNG"); // パスは適宜合わせてください
+	// 水たまりを追加
+	gimmicks_.push_back(std::make_shared<GimmickPuddle>(800.0f, 1200.0f, 760.0f));
+
+	// 水滴を追加
+	gimmicks_.push_back(std::make_shared<GimmickWater>(1500.0f, 200.0f, 760.0f, 2.0f, waterTex));
+
+
 	// ★【追加】シーンマネージャーから、さっき保存したステージ番号（1?3）を受け取る
 	int stageNum = sceneMng_->GetStageNum();
 
@@ -25,9 +37,7 @@ SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
 	player_.SystemInit();
 	player_.GameInit();
 
-
 	
-	stage_.Init(stageNum, fileMng);
 
 	// --- アイテムの初期化 ---
 	isItemExist_ = false;
@@ -116,6 +126,24 @@ void SceneGame::Update()
 	// プレイヤー更新
 	player_.Update(InputManager::GetInstance());
 
+	// --- 【追加】全ギミックの更新と当たり判定 ---
+	float deltaTime = 1.0f / 60.0f; // 60FPS固定と仮定
+	for (auto& gimmick : gimmicks_) {
+		// ギミックの動きを更新（水滴が落ちる等）
+		gimmick->Update(deltaTime);
+
+		// プレイヤーとの当たり判定
+		if (player_.GetHitBox().IsHit(gimmick->GetHitBox())) {
+			// 当たった時の処理（汚れ増加）
+			gimmick->OnTouch(player_, deltaTime);
+		}
+		else {
+			// 離れたらリセット
+			gimmick->OnLeave();
+		}
+	}
+
+
 	// 汚れレベルが3以上になったら即座にゲームオーバーシーンへ
 	if (player_.GetDirtLevel() >= 3)
 	{
@@ -185,7 +213,12 @@ void SceneGame::Draw()
 	// ステージ（背景・床・段差・ゴール等）の描画
 	stage_.Draw(cameraX_, kScreenWidth, kScreenHeight);
 
-	// vC[`i? Player ?``j
+	// --- 【追加】全ギミックの描画 ---
+	for (auto& gimmick : gimmicks_) {
+		gimmick->Draw(static_cast<int>(cameraX_), 0);
+	}
+
+	// プレイヤー描画
 	const int playerGraphHandle = (playerImage_ ? playerImage_->GetHandle() : -1);
 	player_.Draw(cameraX_, playerGraphHandle);
 

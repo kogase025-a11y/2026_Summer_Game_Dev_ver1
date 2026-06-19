@@ -30,5 +30,6 @@ private:
     float timer_;       // 復活までのタイマー
     float interval_;    // 復活する間隔
     bool isVisible_;    // 今落ちている最中か
+    bool isFalling_;    // 落下中かどうか
     std::shared_ptr<ImageFile> tex_; // 水滴の画像
 };

@@ -82,13 +82,13 @@ void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
     DrawBox(0, groundY, screenWidth, screenHeight, GetColor(60, 170, 60), TRUE);
 
     // 2. êÖÇΩÇ‹ÇËÅEâòÇÍínñ 
-    const int pLeft = static_cast<int>(puddleStartX_ - cameraX);
+    /*const int pLeft = static_cast<int>(puddleStartX_ - cameraX);
     const int pRight = static_cast<int>(puddleEndX_ - cameraX);
     DrawBox(pLeft, groundY, pRight, groundY + 20, GetColor(50, 50, 200), TRUE);
 
     const int dLeft = static_cast<int>(dirtyStartX_ - cameraX);
     const int dRight = static_cast<int>(dirtyEndX_ - cameraX);
-    DrawBox(dLeft, groundY, dRight, groundY + 20, GetColor(50, 50, 200), TRUE);
+    DrawBox(dLeft, groundY, dRight, groundY + 20, GetColor(50, 50, 200), TRUE);*/
 
     // 3. íiç∑ÇÃï`âÊ (1, 2, 3)
     auto DrawStep = [&](float start, float end, float top, unsigned int color) {

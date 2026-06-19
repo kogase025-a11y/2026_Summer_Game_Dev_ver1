@@ -3,6 +3,7 @@
 #include "../Manager/Input/InputManager.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
+#include "../Gimmick/GimmickSuper.h"
 #include <DxLib.h>
 #include <memory>
 
@@ -36,6 +37,8 @@ private:
 	FileManager& fileMng_;
 	SceneManager* sceneMng_ = nullptr;
 	std::shared_ptr<ImageFile> playerImage_;
+	// ギミックをまとめて持っておくためのリスト
+	std::vector<std::shared_ptr<GimmickSuper>> gimmicks_;
 
 	// ポーズ中かどうかのフラグ
 	bool isPause_ = false;
