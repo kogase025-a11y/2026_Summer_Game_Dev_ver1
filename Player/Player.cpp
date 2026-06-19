@@ -9,10 +9,10 @@
 Player::Player(Stage* stage, FileManager& fileMng)
     : stage_(stage), fileMng_(fileMng), sceneGame_(nullptr)
 {
-    particleTex = fileMng_.LoadImageFM("Image/ToiletPaper.PNG");
-    wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaperYogore.PNG");
-    wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaperYogore2.PNG");
-    wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaperYogore3.PNG");
+    particleTex = fileMng_.LoadImageFM("Image/ToiletPaper.png.png");
+    wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaper2.png.png");
+    wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaper3.png.png");
+    wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaper4.png.png");
     jumpSe_ = fileMng_.LoadSoundFM("Image/Sound/jump03.mp3");
     goalSe_ = fileMng_.LoadSoundFM("Image/Sound/Level up! Ragnarok.mp3");
     puddleSe_ = fileMng_.LoadSoundFM("Image/Sound/powerdown07.mp3");

@@ -198,6 +198,7 @@
     <Image Include="Image\GameOver.PNG" />
     <Image Include="Image\GameTitle.PNG" />
     <Image Include="Image\GoalMan.png" />
+    <Image Include="Image\Haneterumizu.png" />
     <Image Include="Image\Jyaguti .png" />
     <Image Include="Image\mizu.png" />
     <Image Include="Image\mizu2.png" />
@@ -207,9 +208,13 @@
     <Image Include="Image\Score.png" />
     <Image Include="Image\toileroom.png" />
     <Image Include="Image\ToiletPaper.PNG" />
+    <Image Include="Image\Toiletpaper.png.png" />
     <Image Include="Image\toiletpaper2.png" />
+    <Image Include="Image\Toiletpaper2.png.png" />
     <Image Include="Image\toiletpaper3.png" />
+    <Image Include="Image\Toiletpaper3.png.png" />
     <Image Include="Image\toiletpaper4.png" />
+    <Image Include="Image\Toiletpaper4.png.png" />
     <Image Include="Image\ToiletPaperYogore.PNG" />
     <Image Include="Image\ToiletPaperYogore2.PNG" />
     <Image Include="Image\ToiletPaperYogore3.PNG" />
@@ -218,6 +223,11 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+<<<<<<< HEAD
+=======
+    <None Include="x64\Debug\AGS Summer.exe" />
+    <None Include="x64\Debug\AGS Summer.ilk" />
+>>>>>>> origin/koga
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.txt" />
@@ -228,6 +238,14 @@
     <Media Include="Image\sound\Level up! Ragnarok.mp3" />
     <Media Include="Image\sound\powerdown07.mp3" />
   </ItemGroup>
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+    <Object Include="x64\Debug\Camera.obj" />
+    <Object Include="x64\Debug\GameData.obj" />
+    <Object Include="x64\Debug\ソース.obj" />
+  </ItemGroup>
+>>>>>>> origin/koga
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
