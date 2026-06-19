@@ -148,31 +148,21 @@
     <Image Include="Image\ToiletPaperYogore.PNG" />
     <Image Include="Image\ToiletPaperYogore2.PNG" />
     <Image Include="Image\ToiletPaperYogore3.PNG" />
+    <Image Include="Image\Haneterumizu.png" />
+    <Image Include="Image\Toiletpaper.png.png" />
+    <Image Include="Image\Toiletpaper2.png.png" />
+    <Image Include="Image\Toiletpaper3.png.png" />
+    <Image Include="Image\Toiletpaper4.png.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
     <None Include="x64\Debug\AGS Summer.exe" />
-    <None Include="x64\Debug\AGS Summer.exe.recipe" />
     <None Include="x64\Debug\AGS Summer.ilk" />
-    <None Include="x64\Debug\AGS Summer.pdb" />
-    <None Include="x64\Debug\vc143.idb" />
-    <None Include="x64\Debug\vc143.pdb" />
-    <None Include="x64\Debug\AGS Summer.tlog\AGS Summer.lastbuildstate" />
-    <None Include="x64\Debug\AGS Summer.tlog\CL.command.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\Cl.items.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\CL.read.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\CL.write.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.command.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.read.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.secondary.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.write.1.tlog" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.txt" />
     <Text Include="mylog.txt" />
-    <Text Include="x64\Debug\AGS Summer.log" />
-    <Text Include="x64\Debug\AGS Summer.vcxproj.FileListAbsolute.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Image\sound\jump03.mp3" />
@@ -180,28 +170,8 @@
     <Media Include="Image\sound\powerdown07.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="x64\Debug\Application.obj" />
-    <Object Include="x64\Debug\AsoUtility.obj" />
     <Object Include="x64\Debug\Camera.obj" />
-    <Object Include="x64\Debug\Fade.obj" />
-    <Object Include="x64\Debug\Fps.obj" />
     <Object Include="x64\Debug\GameData.obj" />
-    <Object Include="x64\Debug\InputManager.obj" />
-    <Object Include="x64\Debug\main.obj" />
-    <Object Include="x64\Debug\Player.obj" />
-    <Object Include="x64\Debug\SceneClear.obj" />
-    <Object Include="x64\Debug\SceneGame.obj" />
-    <Object Include="x64\Debug\SceneGameOver.obj" />
-    <Object Include="x64\Debug\SceneManager.obj" />
-    <Object Include="x64\Debug\SceneSetting.obj" />
-    <Object Include="x64\Debug\SceneStageSelect.obj" />
-    <Object Include="x64\Debug\SceneTitle.obj" />
-    <Object Include="x64\Debug\Stage.obj" />
-    <Object Include="x64\Debug\Stage1Script.obj" />
-    <Object Include="x64\Debug\Stage2Script.obj" />
-    <Object Include="x64\Debug\Stage3Script.obj" />
-    <Object Include="x64\Debug\StageConfigTable.obj" />
-    <Object Include="x64\Debug\Vector2F.obj" />
     <Object Include="x64\Debug\ソース.obj" />
   </ItemGroup>
 </Project>
