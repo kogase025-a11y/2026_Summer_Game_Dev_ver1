@@ -63,6 +63,7 @@ private:
     void UpdateInvincibleTimer();                // 無敵タイマー更新
     void UpdateStateName(const InputManager& input); // 状態名の更新
     void CheckTerrainCollision();                // 地形(水たまり等)判定
+    //void ApplyDirt(); // 汚れを1段階上げ、無敵なら無視する処理
 
     // 段差衝突判定の共通処理
     void CheckStepCollision(float sStart, float sEnd, float sTop, float pHalf, float prevX);

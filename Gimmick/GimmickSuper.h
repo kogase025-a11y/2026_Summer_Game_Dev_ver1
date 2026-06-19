@@ -1,7 +1,6 @@
 #pragma once
 #include "../Util/Rect.h"
 #include "../Resource/ImageFile.h"
-
 #include <DxLib.h>
 #include <memory>
 
