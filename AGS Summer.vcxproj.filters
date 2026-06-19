@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="�w�b�_�[ �t�@�C��">
+    <Filter Include=" w b _ [  t @ C  ">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
@@ -30,97 +30,97 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="FPS\Fps.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Manager\SceneManager.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Resource\FileSuper.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Manager\FileManager.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Manager\ResourceManager.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneSuper.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneTitle.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneGame.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneClear.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Resource\ImageFile.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Resource\SoundFile.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Util\Rect.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Util\Vector2.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Util\Fade.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Player\Player.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Manager\Input\InputManager.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\Stage.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Util\AsoUtility.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Util\Vector2F.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneStageSelect.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageScript\StageScriptSuper.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageConfig\StageConfig.h">
-      <Filter>�w�b�_�[ �t�@�C��</Filter>
+      <Filter> w b _ [  t @ C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneSetting.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Manager\BGMmanager.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageScript\Stage1Script.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageScript\Stage2Script.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageScript\Stage3Script.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Stage\StageConfig\StageConfigTable.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneGameOver.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
     <ClInclude Include="Gimmick\GimmickSuper.h">
-      <Filter>�w�b�_�[ �t�%40�C��</Filter>
+      <Filter> w b _ [  t %40 C  </Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,7 +182,6 @@
   <ItemGroup>
     <Object Include="x64\Debug\Application.obj" />
     <Object Include="x64\Debug\AsoUtility.obj" />
-    <Object Include="x64\Debug\Camera.obj" />
     <Object Include="x64\Debug\Fade.obj" />
     <Object Include="x64\Debug\Fps.obj" />
     <Object Include="x64\Debug\GameData.obj" />
