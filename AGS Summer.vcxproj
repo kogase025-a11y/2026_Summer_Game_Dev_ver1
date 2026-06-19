@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -225,29 +225,6 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
-<<<<<<< HEAD
-    <None Include="x64\Debug\AGS Summer.exe" />
-    <None Include="x64\Debug\AGS Summer.exe.recipe" />
-    <None Include="x64\Debug\AGS Summer.ilk" />
-    <None Include="x64\Debug\AGS Summer.pdb" />
-    <None Include="x64\Debug\AGS Summer.tlog\AGS Summer.lastbuildstate" />
-    <None Include="x64\Debug\AGS Summer.tlog\CL.command.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\Cl.items.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\CL.read.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\CL.write.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.command.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.read.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.secondary.1.tlog" />
-    <None Include="x64\Debug\AGS Summer.tlog\link.write.1.tlog" />
-    <None Include="x64\Debug\vc143.idb" />
-    <None Include="x64\Debug\vc143.pdb" />
-=======
-<<<<<<< HEAD
-=======
-    <None Include="x64\Debug\AGS Summer.exe" />
-    <None Include="x64\Debug\AGS Summer.ilk" />
->>>>>>> origin/koga
->>>>>>> matuoka
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.txt" />
@@ -261,7 +238,6 @@
     <Media Include="Image\sound\Level up! Ragnarok.mp3" />
     <Media Include="Image\sound\powerdown07.mp3" />
   </ItemGroup>
-<<<<<<< HEAD
   <ItemGroup>
     <Object Include="x64\Debug\Application.obj" />
     <Object Include="x64\Debug\AsoUtility.obj" />
@@ -285,16 +261,6 @@
     <Object Include="x64\Debug\StageConfigTable.obj" />
     <Object Include="x64\Debug\Vector2F.obj" />
   </ItemGroup>
-=======
-<<<<<<< HEAD
-=======
-  <ItemGroup>
-    <Object Include="x64\Debug\Camera.obj" />
-    <Object Include="x64\Debug\GameData.obj" />
-    <Object Include="x64\Debug\ソース.obj" />
-  </ItemGroup>
->>>>>>> origin/koga
->>>>>>> matuoka
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
