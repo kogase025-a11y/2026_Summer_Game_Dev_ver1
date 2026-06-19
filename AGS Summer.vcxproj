@@ -137,6 +137,8 @@
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
+    <ClCompile Include="Gimmick\GimmickPuddle.cpp" />
+    <ClCompile Include="Gimmick\GimmickWaterDrop.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager\Input\InputManager.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
@@ -172,7 +174,9 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="FPS\Fps.h" />
+    <ClInclude Include="Gimmick\GimmickPuddle.h" />
     <ClInclude Include="Gimmick\GimmickSuper.h" />
+    <ClInclude Include="Gimmick\GimmickWaterDrop.h" />
     <ClInclude Include="Manager\BGMmanager.h" />
     <ClInclude Include="Manager\FileManager.h" />
     <ClInclude Include="Manager\Input\InputManager.h" />
