@@ -11,9 +11,9 @@ Player::Player(Stage* stage, FileManager& fileMng)
     : stage_(stage), fileMng_(fileMng), sceneGame_(nullptr)
 {
     particleTex = fileMng_.LoadImageFM("Image/ToiletPaper.png");
-    wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaper2.png.png");
-    wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaper3.png.png");
-    wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaper4.png.png");
+    wetTexs[0] = fileMng_.LoadImageFM("Image/ToiletPaper2.png");
+    wetTexs[1] = fileMng_.LoadImageFM("Image/ToiletPaper3.png");
+    wetTexs[2] = fileMng_.LoadImageFM("Image/ToiletPaper4.png");
     jumpSe_ = fileMng_.LoadSoundFM("Image/Sound/jump03.mp3");
     goalSe_ = fileMng_.LoadSoundFM("Image/Sound/Level up! Ragnarok.mp3");
     puddleSe_ = fileMng_.LoadSoundFM("Image/Sound/powerdown07.mp3");
@@ -105,11 +105,11 @@ void Player::Update(const InputManager& input) {
     */
    /* wasInPuddle_ = isInPuddle_;*/
 
-    // 7. 汚れ地面ヒット時の処理
-    if (isInDirty_ && !wasInDirty_) {
-        if (dirtLevel_ < 3) dirtLevel_++;
-    }
-    wasInDirty_ = isInDirty_;
+    //// 7. 汚れ地面ヒット時の処理
+    //if (isInDirty_ && !wasInDirty_) {
+    //    if (dirtLevel_ < 3) dirtLevel_++;
+    //}
+    //wasInDirty_ = isInDirty_;
 
     // 8. 状態名の更新
     UpdateStateName(input);

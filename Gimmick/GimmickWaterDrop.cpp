@@ -1,102 +1,90 @@
-#include "../Gimmick/GimmickWaterDrop.h"
-#include "../Player/Player.h" // Playerの関数を呼ぶため
+#include "../Gimmick/GimmickWaterDrop.h" 
+#include "../Player/Player.h"
+#include <DxLib.h>
 
 GimmickWater::GimmickWater(float x, float startY, float endY, float interval, std::shared_ptr<ImageFile> tex)
     : posX_(x), startY_(startY), endY_(endY), posY_(startY), interval_(interval), tex_(tex)
 {
     timer_ = interval_;
-    isVisible_ = false;
-    hitBoxSizeX = 20; // 当たり判定の幅
-    hitBoxSizeY = 20; // 当たり判定の高さ
+    isVisible_ = false; // 最初は待機中
+    wasTouching = false;
+    hitBoxSizeX = 20;
+    hitBoxSizeY = 20;
 }
 
 void GimmickWater::Update(float deltaTime)
 {
     if (!isVisible_)
     {
-        // 待機中：タイマーを減らす
+        // 1. 待機中の処理
         timer_ -= deltaTime;
         if (timer_ <= 0)
         {
-            isVisible_ = true;
-            posY_ = startY_;
+            isVisible_ = true;  // 出現！
+            posY_ = startY_;    // 開始位置に戻す
+            wasTouching = false; // ★新しい水滴なので判定をリセット！
         }
     }
     else
     {
-        // 落下中：下に移動
-        posY_ += 400.0f * deltaTime; // 400.0fは落下の速さ（調整可能）
+        // 2. 落下中の処理
+        posY_ += 400.0f * deltaTime; // 下に移動
 
         // 地面まで行ったら消える
         if (posY_ > endY_)
         {
             isVisible_ = false;
-            timer_ = interval_; // 再びタイマーセット
-            wasTouching = false; // 当たり判定フラグをリセット
+            timer_ = interval_;
+            wasTouching = false; // 地面についた時も念のためリセット
         }
     }
 }
 
 void GimmickWater::Draw(int scrollX, int scrollY) const
 {
-    if (!isVisible_) return;
+    if (!isVisible_) return; // 見えていない時は描かない
 
     int drawX = static_cast<int>(posX_) - scrollX;
     int drawY = static_cast<int>(posY_) - scrollY;
 
-    if (tex_)
-    {
+    if (tex_) {
         DrawGraph(drawX - 16, drawY - 16, tex_->GetHandle(), TRUE);
     }
-    else
-    {
-        // 画像がない場合の仮描画（青い丸）
+    else {
         DrawCircle(drawX, drawY, 10, GetColor(0, 100, 255), TRUE);
     }
 }
 
 Rect GimmickWater::GetHitBox() const
 {
-    Rect r; // まず変数を作る
-    if (!isVisible_)
-    {
-        // 非表示のときはサイズ0のRectを返す
-        r.x = 0.0f;
-        r.y = 0.0f;
-        r.w = 0.0f;
-        r.h = 0.0f;
+    Rect r;
+    // ★ここが大事！見えていない時は当たり判定を消す
+    if (!isVisible_) {
+        r.x = 0; r.y = 0; r.w = 0; r.h = 0;
         return r;
     }
 
-    // posX_, posY_ は水滴の中心なので、
-    // そこからサイズ（hitBoxSize）の半分を引いて「左上」の座標を計算します
     r.x = posX_ - (static_cast<float>(hitBoxSizeX) / 2.0f);
     r.y = posY_ - (static_cast<float>(hitBoxSizeY) / 2.0f);
-
-    // 幅と高さはそのまま代入します
     r.w = static_cast<float>(hitBoxSizeX);
     r.h = static_cast<float>(hitBoxSizeY);
-
     return r;
 }
+
 void GimmickWater::OnTouch(Player& player, float deltaTime)
 {
-    // すでに落下中でない（消えている）なら何もしない
-    if (!isFalling_) return;
+    // ★重要：isFalling_ ではなく isVisible_ を使う！
+    if (!isVisible_) return;
 
-    // wasTouching を使って、その水滴との最初の接触だけ判定する
+    // まだこの水滴に当たっていないなら
     if (!wasTouching) {
-        // プレイヤーを汚す
-        player.AddDirt();
+        player.AddDirt(); // プレイヤーを汚す
 
-        // 【重要】当たったら水滴を消す（待機状態に戻す）
-        isFalling_ = false;
-        timer_ = interval_; // 次に落ちるまでの待ち時間をリセット
+        // ★当たった瞬間に「消す」
+        isVisible_ = false;
+        timer_ = interval_;
 
-        // 接触フラグを立てる
+        // 接触済みフラグを立てる
         wasTouching = true;
-
-        // もし水滴が当たった時の専用SEがあればここで鳴らす
-        // PlaySoundMem(waterHitSe, DX_PLAYTYPE_BACK);
     }
 }
