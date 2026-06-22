@@ -159,19 +159,6 @@
     <ClCompile Include="Util\Vector2F.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Image\block_rock.png" />
-    <Image Include="Image\GameClear.PNG" />
-    <Image Include="Image\GameCliar.PNG" />
-    <Image Include="Image\Mizushibuki.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".gitignore" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="mylog.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="FPS\Fps.h" />
     <ClInclude Include="Gimmick\GimmickPuddle.h" />
@@ -206,8 +193,7 @@
     <ClInclude Include="Util\Vector2.h" />
     <ClInclude Include="Util\Vector2F.h" />
   </ItemGroup>
-<<<<<<< HEAD
-=======
+
   <ItemGroup>
     <Image Include="Image\Baketu.png" />
     <Image Include="Image\block_rock.png" />
@@ -278,7 +264,7 @@
     <Object Include="x64\Debug\StageConfigTable.obj" />
     <Object Include="x64\Debug\Vector2F.obj" />
   </ItemGroup>
->>>>>>> matuoka
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
