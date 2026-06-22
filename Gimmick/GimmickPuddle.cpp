@@ -13,15 +13,32 @@ void GimmickPuddle::Update(float deltaTime) {
 }
 
 void GimmickPuddle::Draw(int scrollX, int scrollY) const {
-    // 描画：透明感のある青色にする
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150); // 半透明に
+    // --- 1. 透明度の設定 ---
+    // 前は150でしたが、210に上げました（よりハッキリ見えます）
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 210);
+
+    // --- 2. 水たまり本体を描画 ---
+    // 前は (50, 150, 255) でしたが、(0, 80, 200) にして「深い青」にしました
+    unsigned int puddleColor = GetColor(0, 80, 200);
+
     DrawBox(
         static_cast<int>(x1_) - scrollX,
-        static_cast<int>(y_) - 2 - scrollY, // 地面より少しだけ上にする
+        static_cast<int>(y_) - 2 - scrollY,
         static_cast<int>(x2_) - scrollX,
         static_cast<int>(y_) + 10 - scrollY,
-        GetColor(50, 150, 255), TRUE
+        puddleColor, TRUE
     );
+
+    // --- 3. 【追加】フチ取りを描画する（これでさらに「濃く」見えます） ---
+    // 少しだけ暗い色で、塗りつぶさない四角を描きます
+    DrawBox(
+        static_cast<int>(x1_) - scrollX,
+        static_cast<int>(y_) - 2 - scrollY,
+        static_cast<int>(x2_) - scrollX,
+        static_cast<int>(y_) + 10 - scrollY,
+        GetColor(0, 40, 150), FALSE // FALSEは枠線だけ
+    );
+
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 戻す
 }
 
