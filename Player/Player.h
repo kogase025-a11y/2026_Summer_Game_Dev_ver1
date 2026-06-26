@@ -20,7 +20,12 @@ class Player {
 public:
     // --- 定数 (バランス調整用) ---
     static const int SIZE_X = 96;	            // プレイヤーの横幅
-    static const int SIZE_Y = 64;	            // プレイヤーの縦幅
+    static const int SIZE_Y = 96;	            // プレイヤーの縦幅
+    // 当たり判定のサイズ（トイレットペーパーの「芯」を含めた内側の白い部分に合わせるイメージ）
+     // --- 判定サイズ調整用 ---
+    static constexpr float HIT_W = 120.0f;      // 横幅（水に当たるのが早すぎたらここを少し減らす）
+    static constexpr float HIT_H = 130.0f;      // 縦幅
+    static constexpr float OFFSET_Y = 0.0f;    // 地面への沈み込み（アイテム用）
     static constexpr float ANIM_SPEED = 0.1f;   // アニメーション速度
     static constexpr float MAX_MOVE_SPEED = 10.5f; // 最大移動速度
     static constexpr float MOVE_ACC = 0.25f;    // 移動加速度
@@ -63,14 +68,19 @@ public:
 
    
     // ★これを追加（自分の当たり判定の箱を作る）
+      // 当たり判定の四角を返す
     Rect GetHitBox() const {
         Rect r;
-        r.x = positionX_ - 24.0f;
-        r.y = positionY_ - 60.0f;
-        r.w = 48.0f;
-        r.h = 60.0f;
+        r.w = HIT_W;
+        r.h = HIT_H;
+        r.x = positionX_ - (r.w / 2.0f);
+        r.y = positionY_ - r.h + OFFSET_Y;
         return r;
     }
+   
+
+    
+
     // ★これを追加（ギミックから「汚せ！」と言われた時に実行する）
     void AddDirt() {
         if (!isInvincible_ && dirtLevel_ < 3) {
@@ -99,6 +109,8 @@ private:
     void AddGravity();         // 重力加算
     void Jump();               // ジャンプ実行
     void SetJumpPow(float pow);// 上昇速度設定
+
+    
 
 private:
     // 依存ポインタ

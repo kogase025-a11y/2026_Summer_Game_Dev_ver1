@@ -126,19 +126,15 @@ void SceneGame::Update()
 	// プレイヤー更新
 	player_.Update(InputManager::GetInstance());
 
-	// --- 【追加】全ギミックの更新と当たり判定 ---
-	float deltaTime = 1.0f / 60.0f; // 60FPS固定と仮定
+	// --- 1. 全ギミックの更新と当たり判定 ---
+	float deltaTime = 1.0f / 60.0f;
 	for (auto& gimmick : gimmicks_) {
-		// ギミックの動きを更新（水滴が落ちる等）
 		gimmick->Update(deltaTime);
-
-		// プレイヤーとの当たり判定
+		// ★ player_.GetHitBox() を使っているのでここはOK！
 		if (player_.GetHitBox().IsHit(gimmick->GetHitBox())) {
-			// 当たった時の処理（汚れ増加）
 			gimmick->OnTouch(player_, deltaTime);
 		}
 		else {
-			// 離れたらリセット
 			gimmick->OnLeave();
 		}
 	}
@@ -157,34 +153,32 @@ void SceneGame::Update()
 	const float cameraMax = stage_.GetStageWidth() - static_cast<float>(kScreenWidth);
 	cameraX_ = (std::max)(0.0f, (std::min)(targetCameraX, cameraMax));
 	// --- アイテムとの当たり判定 ---
+	  // --- 2. アイテムとの当たり判定 ---
 	if (isItemExist_) {
-		// プレイヤーの当たり判定
-		Rect playerRect{ player_.GetX() - 24.0f, player_.GetY() - 48.0f, 48.0f, 48.0f };
-		// アイテムの当たり判定（32x32の範囲とする）
-		Rect itemRect{ itemX_ - 16.0f, itemY_ - 16.0f, 32.0f, 32.0f };
+		// ★修正：古い Rect を消して、でかい判定を使う
+		Rect playerHit = player_.GetHitBox();
+		Rect itemRect{ itemX_ - 20.0f, itemY_ - 20.0f, 40.0f, 40.0f }; // アイテム側の箱
 
-		if (playerRect.IsHit(itemRect)) {
-			isItemExist_ = false; // アイテムを消す
-
-			// ★追加：現在のステージ番号に応じてフラグを立てる
+		if (playerHit.IsHit(itemRect)) {
+			isItemExist_ = false; // ゲット！
 			int stageNum = sceneMng_->GetStageNum();
 			if (stageNum == 1) sceneMng_->SetItem1(true);
 			if (stageNum == 2) sceneMng_->SetItem2(true);
-
 		}
 	}
-	// Git Project  Rect gS[?
-	const Rect playerRect{ player_.GetX() - 24.0f, player_.GetY() - 48.0f, 48.0f, 48.0f };
-	const Rect goalRect{ stage_.GetGoalX() - 16.0f, stage_.GetGroundY() - 180.0f, 32.0f, 180.0f };
-	if (playerRect.IsHit(goalRect) && !isGoal_)
+
+	// --- 3. ゴールとの当たり判定 ---
+	// ★修正：ここも player_.GetHitBox() に変更
+	const Rect playerHitForGoal = player_.GetHitBox();
+	const Rect goalRect{ stage_.GetGoalX() - 30.0f, stage_.GetGroundY() - 200.0f, 60.0f, 200.0f };
+
+	if (playerHitForGoal.IsHit(goalRect) && !isGoal_)
 	{
 		isGoal_ = true;
 		goalTimer_ = 0;
-
-
-		
 		player_.PlayGoalSound();
 	}
+
 	
 	if (isGoal_)
 	{

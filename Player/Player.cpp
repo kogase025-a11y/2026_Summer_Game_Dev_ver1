@@ -119,18 +119,35 @@ void Player::Update(const InputManager& input) {
  * 水たまりや汚れ地面との接触判定
  */
 void Player::CheckTerrainCollision() {
+   
+
+    // プレイヤーの「赤い枠」の左右の端を使う
+   /* Rect hb = GetHitBox();
+    const float playerLeft = hb.x;
+    const float playerRight = hb.x + hb.w;
+
+    const float puddleStart = stage_->GetPuddleStartX();
+    const float puddleEnd = stage_->GetPuddleEndX();*/
+
     isInPuddle_ = false;
+    isInDirty_ = false;
+
+    // 赤い枠を取得
+    Rect hb = GetHitBox();
+
+    // 水たまり判定用の左右（あえて少しだけ内側を判定して「早すぎる」のを防ぐ）
+    const float checkMargin = 10.0f; // この数値を大きくすると、より中央まで行かないと反応しなくなる
+    const float checkLeft = hb.x + checkMargin;
+    const float checkRight = hb.x + hb.w - checkMargin;
+
     const float puddleStart = stage_->GetPuddleStartX();
     const float puddleEnd = stage_->GetPuddleEndX();
 
-    isInDirty_ = false;
-    const float dirtyStart = stage_->GetDirtyStartX();
-    const float dirtyEnd = stage_->GetDirtyEndX();
-
-    // 地面にいて、X座標が範囲内なら「中」とみなす
-    if (onGround_ && (positionY_ == stage_->GetGroundY())) {
-        if (positionX_ >= puddleStart && positionX_ <= puddleEnd) isInPuddle_ = true;
-        if (positionX_ >= dirtyStart && positionX_ <= dirtyEnd) isInDirty_   = true;
+    if (onGround_) {
+        // 水たまりとの重なり判定
+        if (checkRight >= puddleStart && checkLeft <= puddleEnd) {
+            isInPuddle_ = true;
+        }
     }
 }
 
@@ -164,37 +181,31 @@ void Player::Draw() { Draw(0.0f, -1); }
  * 描画処理：汚れレベルに応じた画像選択と、中心点調整
  */
 void Player::Draw(float cameraX, int playerGraphHandle) const {
-    // 無敵中の点滅演出
-    if (isInvincible_) {
-        if ((GetNowCount() / 100) % 2 == 0) return;
-    }
+    if (isInvincible_ && (GetNowCount() / 100) % 2 == 0) return;
 
     const int drawX = static_cast<int>(positionX_ - cameraX);
     const int drawY = static_cast<int>(positionY_);
 
-    // 画像の「穴」が足元から32px上にくるように中心点を設定
-    const int imageCenterY = drawY - 32;
+    // 画像の中心を計算（赤い枠の中央に画像を配置する）
+    const int imageCenterY = drawY - static_cast<int>(HIT_H / 2.0f) + static_cast<int>(OFFSET_Y);
 
-    // 汚れ、通常画像、外部指定、または仮の四角形の順で描画
+    // 画像描画
     if (dirtLevel_ > 0) {
-        int animIndex = dirtLevel_ - 1;
-        while (animIndex >= 0 && !wetTexs[animIndex]) animIndex--;
-        if (animIndex >= 0 && wetTexs[animIndex]) {
-            DrawRotaGraph(drawX, imageCenterY, 1.0, angle_, wetTexs[animIndex]->GetHandle(), TRUE);
-        }
-    }
-    else if (particleTex) {
-        DrawRotaGraph(drawX, imageCenterY, 1.0, angle_, particleTex->GetHandle(), TRUE);
-    }
-    else if (playerGraphHandle >= 0) {
-        DrawRotaGraph(drawX, imageCenterY, 1.0, angle_, playerGraphHandle, TRUE);
+        DrawRotaGraph(drawX, imageCenterY, 1.0, angle_, wetTexs[dirtLevel_ - 1]->GetHandle(), TRUE);
     }
     else {
-        DrawBox(drawX - 32, drawY - 64, drawX + 32, drawY, GetColor(120, 220, 255), TRUE);
+        DrawRotaGraph(drawX, imageCenterY, 1.0, angle_, particleTex->GetHandle(), TRUE);
     }
 
-    // デバッグ用当たり判定枠
-    DrawBox(drawX - 20, drawY - 64, drawX + 20, drawY, GetColor(255, 0, 0), FALSE);
+    // デバッグ表示：赤い枠を表示
+    Rect hb = GetHitBox();
+    DrawBox(
+        static_cast<int>(hb.x - cameraX),
+        static_cast<int>(hb.y),
+        static_cast<int>(hb.x + hb.w - cameraX),
+        static_cast<int>(hb.y + hb.h),
+        GetColor(255, 0, 0), FALSE
+    );
 }
 
 /**
@@ -217,38 +228,31 @@ void Player::Move(void) {
     ...
     */
 
-    const float playerHalfWidth = static_cast<float>(SIZE_X) / 2.0f;
+    const float playerHalfWidth = HIT_W / 2.0f; // 左右の判定半径
     const float prevX = positionX_;
 
-    // 横移動
+    // 1. 横移動
     positionX_ += velocityX_;
 
-    // ステージ幅でクランプ（(std::min)のように括弧をつけるのはDxLibマクロ衝突回避）
+    // 2. ステージ端の判定
     const float stageW = (std::max)(0.0f, stage_->GetStageWidth());
-    const float minX = playerHalfWidth;
-    const float maxX = (std::max)(minX, stageW - playerHalfWidth);
-    if (positionX_ < minX) positionX_ = minX;
-    if (positionX_ > maxX) positionX_ = maxX;
+    if (positionX_ < playerHalfWidth) { positionX_ = playerHalfWidth; velocityX_ = 0.0f; }
+    if (positionX_ > stageW - playerHalfWidth) { positionX_ = stageW - playerHalfWidth; velocityX_ = 0.0f; }
 
-   
-
-    // 段差の衝突判定（3つ分）
+    // 3. 段差（壁）の衝突判定
     CheckStepCollision(stage_->GetStepStartX(), stage_->GetStepEndX(), stage_->GetStepTopY(), playerHalfWidth, prevX);
     CheckStepCollision(stage_->GetStep2StartX(), stage_->GetStep2EndX(), stage_->GetStep2TopY(), playerHalfWidth, prevX);
     CheckStepCollision(stage_->GetStep3StartX(), stage_->GetStep3EndX(), stage_->GetStep3TopY(), playerHalfWidth, prevX);
 
-   
-
-    // 足元の高さ計算（プレイヤーの幅の範囲で最も高い場所を探す）
+    // 4. 足元の地面判定 (3点チェックで安定させる)
     const float sYMid = stage_->GetGroundYAtX(positionX_);
     const float sYL = stage_->GetGroundYAtX(positionX_ - playerHalfWidth + 1.0f);
     const float sYR = stage_->GetGroundYAtX(positionX_ + playerHalfWidth - 1.0f);
-    const float supportGroundY = (std::min)(sYMid, (std::min)(sYL, sYR));
+    const float supportGroundY = (std::min)({ sYMid, sYL, sYR });
 
-    // 地面より浮いた判定
     if (onGround_ && (positionY_ < supportGroundY - 0.5f)) onGround_ = false;
 
-    // 縦移動
+    // 5. 縦移動
     positionY_ += velocityY_;
     if (positionY_ >= supportGroundY) {
         positionY_ = supportGroundY;
