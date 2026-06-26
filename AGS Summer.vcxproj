@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="FPS\Fps.h" />
+    <ClInclude Include="Gimmick\Fps.h" />
     <ClInclude Include="Gimmick\GimmickPuddle.h" />
     <ClInclude Include="Gimmick\GimmickSuper.h" />
     <ClInclude Include="Gimmick\GimmickWaterDrop.h" />
@@ -193,7 +194,6 @@
     <ClInclude Include="Util\Vector2.h" />
     <ClInclude Include="Util\Vector2F.h" />
   </ItemGroup>
-
   <ItemGroup>
     <Image Include="Image\Baketu.png" />
     <Image Include="Image\block_rock.png" />
@@ -264,7 +264,6 @@
     <Object Include="x64\Debug\StageConfigTable.obj" />
     <Object Include="x64\Debug\Vector2F.obj" />
   </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
