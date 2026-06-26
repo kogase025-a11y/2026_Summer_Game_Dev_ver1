@@ -29,8 +29,8 @@ void GimmickPuddle::Draw(int scrollX, int scrollY) const {
         puddleColor, TRUE
     );
 
-    // --- 3. 【追加】フチ取りを描画する（これでさらに「濃く」見えます） ---
-    // 少しだけ暗い色で、塗りつぶさない四角を描きます
+    // フチ取りを描画する（これでさらに「濃く」見えます） ---
+    // 暗い色で、塗りつぶさない四角を描く
     DrawBox(
         static_cast<int>(x1_) - scrollX,
         static_cast<int>(y_) - 2 - scrollY,
@@ -52,7 +52,7 @@ Rect GimmickPuddle::GetHitBox() const {
 }
 
 void GimmickPuddle::OnTouch(Player& player, float deltaTime) {
-    // 【解説】wasTouchingを使うことで、入った瞬間だけ汚れる
+    //wasTouchingを使うことで、入った瞬間だけ汚れる
     if (!wasTouching) {
         player.AddDirt(); // 汚れを増やす
         wasTouching = true;

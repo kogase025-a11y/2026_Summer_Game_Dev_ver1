@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="FPS\Fps.h" />
+    <ClInclude Include="Gimmick\Fps.h" />
     <ClInclude Include="Gimmick\GimmickPuddle.h" />
     <ClInclude Include="Gimmick\GimmickSuper.h" />
     <ClInclude Include="Gimmick\GimmickWaterDrop.h" />

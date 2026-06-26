@@ -8,8 +8,8 @@ GimmickWater::GimmickWater(float x, float startY, float endY, float interval, st
     timer_ = interval_;
     isVisible_ = false; // 最初は待機中
     wasTouching = false;
-    hitBoxSizeX = 20;
-    hitBoxSizeY = 20;
+    hitBoxSizeX = 30;
+    hitBoxSizeY = 30;
 }
 
 void GimmickWater::Update(float deltaTime)
@@ -22,13 +22,13 @@ void GimmickWater::Update(float deltaTime)
         {
             isVisible_ = true;  // 出現！
             posY_ = startY_;    // 開始位置に戻す
-            wasTouching = false; // ★新しい水滴なので判定をリセット！
+            wasTouching = false; // 水滴判定リセット
         }
     }
     else
     {
         // 2. 落下中の処理
-        posY_ += 400.0f * deltaTime; // 下に移動
+        posY_ += 800.0f * deltaTime; // 下に移動
 
         // 地面まで行ったら消える
         if (posY_ > endY_)
@@ -58,7 +58,7 @@ void GimmickWater::Draw(int scrollX, int scrollY) const
 Rect GimmickWater::GetHitBox() const
 {
     Rect r;
-    // ★ここが大事！見えていない時は当たり判定を消す
+    //見えていない時は当たり判定を消す
     if (!isVisible_) {
         r.x = 0; r.y = 0; r.w = 0; r.h = 0;
         return r;
@@ -73,14 +73,14 @@ Rect GimmickWater::GetHitBox() const
 
 void GimmickWater::OnTouch(Player& player, float deltaTime)
 {
-    // ★重要：isFalling_ ではなく isVisible_ を使う！
+    // isFalling_ ではなく isVisible_ を使う
     if (!isVisible_) return;
 
     // まだこの水滴に当たっていないなら
     if (!wasTouching) {
         player.AddDirt(); // プレイヤーを汚す
 
-        // ★当たった瞬間に「消す」
+        // 当たった瞬間に「消す」
         isVisible_ = false;
         timer_ = interval_;
 
