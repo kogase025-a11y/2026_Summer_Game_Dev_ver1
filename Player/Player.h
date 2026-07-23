@@ -30,7 +30,7 @@ public:
     static constexpr float MAX_MOVE_SPEED = 10.5f; // 最大移動速度
     static constexpr float MOVE_ACC = 0.25f;    // 移動加速度
     static constexpr float MOVE_DEC = 0.05f;    // 移動減速度
-    static constexpr float MAX_JUMP_POW = 8.0f; // ジャンプ初速度
+    static constexpr float MAX_JUMP_POW = 20.0f; // ジャンプ初速度
     static constexpr float GRAVITY = 0.25f;     // 重力
     static constexpr int   INPUT_JUMP_FRAME = 6; // ジャンプ入力の猶予(大ジャンプ用)
 
@@ -89,6 +89,9 @@ public:
             // PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK);
         }
     }
+
+    void SetInPuddle(bool inPuddle) { isInPuddle_ = inPuddle; }
+
 private:
     // --- 内部更新用サブ関数 (Updateから分割) ---
     void ProcessMove(const InputManager& input); // 左右移動入力

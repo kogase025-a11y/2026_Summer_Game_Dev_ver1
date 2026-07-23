@@ -43,7 +43,7 @@ void GimmickPuddle::Draw(int scrollX, int scrollY) const {
 }
 
 Rect GimmickPuddle::GetHitBox() const {
-    Rect r;
+    Rect r; 
     r.x = x1_;
     r.y = y_ - 5; // 足元がちょっと触れたら当たり
     r.w = x2_ - x1_;
@@ -51,10 +51,29 @@ Rect GimmickPuddle::GetHitBox() const {
     return r;
 }
 
+// 既存の OnTouch をこれに差し替える、または追記
 void GimmickPuddle::OnTouch(Player& player, float deltaTime) {
-    //wasTouchingを使うことで、入った瞬間だけ汚れる
-    if (!wasTouching) {
-        player.AddDirt(); // 汚れを増やす
-        wasTouching = true;
+    Rect pRect = player.GetHitBox();
+    Rect gRect = GetHitBox();
+
+    // 矩形同士の当たり判定（AABB）
+    bool isIntersect = (pRect.x < gRect.x + gRect.w &&
+        pRect.x + pRect.w > gRect.x &&
+        pRect.y < gRect.y + gRect.h &&
+        pRect.y + pRect.h > gRect.y);
+
+    if (isIntersect) {
+        // 【入った瞬間だけ実行】汚れを増やす
+        if (!wasTouching) {
+            player.AddDirt();
+            wasTouching = true;
+        }
+        // 触れている間はプレイヤー側のフラグを常に true にする
+        player.SetInPuddle(true);
+    }
+    else {
+        // 完全に水たまりから抜けたらフラグをリセット
+        // これにより、もう一度同じ水たまりに入ったときや、別の水たまりで再度イベントが動く
+        wasTouching = false;
     }
 }

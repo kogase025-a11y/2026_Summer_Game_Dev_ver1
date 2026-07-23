@@ -1,65 +1,46 @@
 #pragma once
 
-#include <memory>
+// Stage.h
+#pragma once
 #include <vector>
+#include <string>
+#include <memory>
 #include "../Resource/ImageFile.h"
 
 class FileManager;
 
-/**
- * @brief ステージの地形・描画・判定を管理するクラス
- */
 class Stage {
 public:
     Stage();
-    ~Stage() = default;
-
-    // --- メイン工程 ---
-    void Init(int stageNum, FileManager& fileMng); // ステージ番号による初期化
+    void Init(int stageNum, FileManager& fileMng);
     void Update();
     void Draw(float cameraX, int screenWidth, int screenHeight) const;
 
-    // --- 判定用アクセッサ ---
-    float GetGroundYAtX(float x) const; // 指定X座標における地面の高さを取得
+    float GetGroundYAtX(float x) const;
     bool  IsWall(float x, float y) const;
-    bool  IsBlock(float x, float y) const;
-
-    // --- 基本パラメータ取得 ---
+	bool  IsBlock(float x, float y) const;
     float GetGroundY() const;
     float GetStageWidth() const;
     float GetGoalX() const;
 
-    // 各地形の範囲取得
-    float GetStepStartX() const; float GetStepEndX() const; float GetStepTopY() const;
-    float GetStep2StartX() const; float GetStep2EndX() const; float GetStep2TopY() const;
-    float GetStep3StartX() const; float GetStep3EndX() const; float GetStep3TopY() const;
-    float GetPuddleStartX() const; float GetPuddleEndX() const;
-    float GetDirtyStartX() const; float GetDirtyEndX() const;
-	float GetBaketuStartX() const; float GetBaketuEndX() const;
-
 private:
-    // --- 定数 ---
-    static const int kTileSize = 64;   // 1マスのサイズ
-    static const int kMapHeight = 17;  // マップの縦マス数
-    static const int kMapWidth = 30;   // マップの横マス数
+    void LoadMapCSV(const std::string& filePath);
+    // ★追加：IDが solid(壁) かどうかを判定する補助関数
+    bool IsSolid(int tileID) const;
 
-    // --- メンバ変数 ---
-    int mapData_[kMapHeight][kMapWidth] = { 0 }; // タイルマップデータ
+    static const int kTileSize = 32;
+    static const int kMapHeight = 34;
+    static const int kMapWidth = 250; // 横に長いCSVに対応するため拡張
 
-    float groundY_;      // 基本の地面の高さ
-    float stageWidth_;   // ステージ全体の横幅
-    float goalX_;        // ゴール地点のX座標
+    int mapData_[kMapHeight][kMapWidth] = { 0 };
 
-    // 地形オブジェクトの座標データ
-    float stepStartX_, stepEndX_, stepTopY_;  // 段差1
-    float step2StartX_, step2EndX_, step2TopY_; // 段差2
-    float step3StartX_, step3EndX_, step3TopY_; // 段差3
-    float slopeStartX_, slopeEndX_;             // 坂道
-    float puddleStartX_, puddleEndX_;           // 水たまり
-    float dirtyStartX_, dirtyEndX_;            // 汚れ地面
-	float baketuStartX_, baketuEndX_;          // バケツ
-    // リソース
+    // ★追加：マップチップ画像をバラバラにして保存する配列
+    // CSVのIDが2000近くあるので、余裕を持って設定
+    static const int kMaxChips = 4000; // 90枚×40行分くらいを確保
+    int chipHandles_[kMaxChips];
+
+    float groundY_;
+    float stageWidth_;
+    float goalX_;
     std::shared_ptr<ImageFile> goalTex_;
-	std::shared_ptr<ImageFile> stepTex_;
-
 };

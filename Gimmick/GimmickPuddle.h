@@ -1,5 +1,10 @@
 #pragma once
-#include "GimmickSuper.h"
+
+#pragma once
+#include "GimmickSuper.h" // 親クラスのヘッダー名に合わせて調整してください
+#include "../Util/Rect.h" // Rectの定義場所に合わせて調整してください
+
+class Player;
 
 class GimmickPuddle : public GimmickSuper {
 public:
@@ -17,4 +22,5 @@ public:
 
 private:
     float x1_, x2_, y_;
+    bool wasTouching = false; // プレイヤーが触れていたかを記録するフラグ
 };

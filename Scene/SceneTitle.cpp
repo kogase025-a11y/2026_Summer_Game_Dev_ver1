@@ -49,7 +49,7 @@ void SceneTitle::Draw()
 	DrawBox(40, 40, width - 40, height - 40, GetColor(180, 20, 20), FALSE);
 	DrawRotaGraphF(centerX, height/2, 1.5, 0.0, titleBg_->GetHandle(), TRUE);
 	
-	drawCenterText(800, "PRESS ENTER TO START", GetColor(250, 250, 250));
+	drawCenterText(800, "PRESS ENTER OR A BUTTON TO START", GetColor(250, 250, 250));
 
 
 	drawCenterText(850, "PUSH START", GetColor(255, 255, 255));

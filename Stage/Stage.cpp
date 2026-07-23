@@ -1,159 +1,139 @@
 #include "Stage.h"
 #include "../Manager/FileManager.h"
 #include <DxLib.h>
+#include <string> 
+#include <memory>
+#include <vector>
+#include <fstream>
+#include <sstream>
 #include <algorithm>
 
 Stage::Stage()
-    : groundY_(760.0f)
-    , stepStartX_(1400.0f), stepEndX_(2200.0f), stepTopY_(640.0f)
-    , step2StartX_(2700.0f), step2EndX_(3000.0f), step2TopY_(640.0f)
-    , step3StartX_(3600.0f), step3EndX_(3800.0f), step3TopY_(600.0f)
+    : groundY_(2000.0f) // 奈落（穴）の設定
     , goalX_(4700.0f)
     , stageWidth_(5000.0f)
-    , puddleStartX_(800.0f), puddleEndX_(1200.0f)
-    , dirtyStartX_(3000.0f), dirtyEndX_(3600.0f)
-	, baketuStartX_(1000.0f), baketuEndX_(1400.0f)
-    
 {
+    // 画像ハンドル配列を初期化
+    for (int i = 0; i < kMaxChips; i++) {
+        chipHandles_[i] = -1;
+    }
 }
 
 void Stage::Init(int stageNum, FileManager& fileMng)
 {
     goalTex_ = fileMng.LoadImageFM("Image/GoalMan.png");
 
-    // --- マップデータの初期化 ---
+    // --- 1. マップチップ画像の分割読み込み (1800x1800画像専用設定) ---
+    
+    // 横1800px / 20px = 90枚。横に90枚並んでいる設定です。
+    // 1800枚分読み込み, 横90枚, 縦20枚, チップ幅20px, チップ高さ20px
+    int result = LoadDivGraph("Image/Map/TileSet.png", 1800, 90, 20, 20, 20, chipHandles_);
+
+    if (result == -1) {
+        // デバッグ用メッセージ（ビルド後に左上に出ます）
+        printfDx("【エラー】Image/Map/TileSet.png が読み込めません！サイズかパスを確認してください。\n");
+    }
+
+    // --- 2. マップデータの全クリア ---
     for (int y = 0; y < kMapHeight; y++) {
-        for (int x = 0; x < kMapWidth; x++) {
-            mapData_[y][x] = 0;
-        }
+        for (int x = 0; x < kMapWidth; x++) mapData_[y][x] = 0;
     }
+    // --- 2. ステージ番号によって読み込むファイルを変える ---
+   // stageNumが 1 なら "Data/Stage1.csv"
+   // stageNumが 2 なら "Data/Stage2.csv" を読み込むようになります
+    std::string csvPath = "Data/Stage" + std::to_string(stageNum) + ".csv";
 
-    // 一番下の行を地面にする
-    for (int x = 0; x < kMapWidth; x++) {
-        mapData_[kMapHeight - 1][x] = 1;
-    }
+    // --- 3. CSVファイルの読み込み ---
+    LoadMapCSV(csvPath);
 
-    // 特定の場所にブロックを配置
-    mapData_[15][10] = 1;
-    mapData_[15][11] = 1;
-
-    // --- ステージ別設定 ---
+    // --- 3. ステージごとの個別の設定（幅やゴールの位置） ---
     if (stageNum == 1) {
-        groundY_ = 760.0f;
-        stepStartX_ = 1400.0f;
-        stepEndX_ = 2200.0f;
-        stepTopY_ = 640.0f;
-        puddleStartX_ = 800.0f;
-        puddleEndX_ = 1200.0f;
-        goalX_ = 4700.0f;
-        stageWidth_ = 5000.0f;
+        stageWidth_ = 6400.0f;
+        goalX_ = 6000.0f;
     }
     else if (stageNum == 2) {
-        groundY_ = 760.0f;
-        stepStartX_ = 800.0f;
-        stepEndX_ = 1500.0f;
-        stepTopY_ = 600.0f;
-        puddleStartX_ = 2000.0f;
-        puddleEndX_ = 2400.0f;
-        goalX_ = 3200.0f;
-        stageWidth_ = 3500.0f;
+        // ステージ2は少し短めにする、などの設定が可能です
+        stageWidth_ = 4000.0f;
+        goalX_ = 3700.0f;
     }
-    else if (stageNum == 3) {
-        groundY_ = 760.0f;
-        stepStartX_ = 2000.0f;
-        stepEndX_ = 2500.0f;
-        stepTopY_ = 550.0f;
-        puddleStartX_ = 500.0f;
-        puddleEndX_ = 900.0f;
-        goalX_ = 4000.0f;
-        stageWidth_ = 4300.0f;
-    }
+
+    // ステージの横幅をCSVに合わせて自動計算
+    stageWidth_ = kMapWidth * kTileSize;
 }
 
 void Stage::Update()
 {
 }
 
+/**
+ * 描画：20pxのチップを64pxに拡大して描画
+ */
 void Stage::Draw(float cameraX, int screenWidth, int screenHeight) const
-{
-    const int groundY = static_cast<int>(groundY_);
-
-    // 1. 基本の床（緑）
-    DrawBox(0, groundY, screenWidth, screenHeight, GetColor(60, 170, 60), TRUE);
-
-    // 2. 水たまり・汚れ地面
-    /*const int pLeft = static_cast<int>(puddleStartX_ - cameraX);
-    const int pRight = static_cast<int>(puddleEndX_ - cameraX);
-    DrawBox(pLeft, groundY, pRight, groundY + 20, GetColor(50, 50, 200), TRUE);
-
-    const int dLeft = static_cast<int>(dirtyStartX_ - cameraX);
-    const int dRight = static_cast<int>(dirtyEndX_ - cameraX);
-    DrawBox(dLeft, groundY, dRight, groundY + 20, GetColor(50, 50, 200), TRUE);*/
-
-    // 3. 段差の描画 (1, 2, 3)
-    auto DrawStep = [&](float start, float end, float top, unsigned int color) {
-        DrawBox(static_cast<int>(start - cameraX), static_cast<int>(top),
-            static_cast<int>(end - cameraX), groundY, color, TRUE);
-        };
-    unsigned int gray = GetColor(110, 110, 110);
-    DrawStep(stepStartX_, stepEndX_, stepTopY_, gray);
-    DrawStep(step2StartX_, step2EndX_, step2TopY_, gray);
-    DrawStep(step3StartX_, step3EndX_, step3TopY_, gray);
-
-   
-    
-
-    // 5. ゴールの描画
-    if (goalTex_) {
-        const int goalDrawX = static_cast<int>(goalX_ - cameraX);
-        int handle = goalTex_->GetHandle();
-        int w, h;
-        GetGraphSize(handle, &w, &h);
-
-        float scale = 0.3f;   // ★大きさ調整
-        double angle = 0.0;
-        float drawY = groundY - (h * scale / 2.0f);
-
-        DrawRotaGraph(goalDrawX, static_cast<int>(drawY), static_cast<double>(scale), angle, handle, TRUE);
-    }
-
-    // 6. mapData_ に基づくタイルの描画
-    for (int y = 0; y < kMapHeight; y++) {
-        for (int x = 0; x < kMapWidth; x++) {
-            if (mapData_[y][x] == 1) {
-                int drawX = x * kTileSize - static_cast<int>(cameraX);
-                int drawY = y * kTileSize;
-                DrawBox(drawX, drawY, drawX + kTileSize, drawY + kTileSize, GetColor(150, 100, 50), TRUE);
-                DrawBox(drawX, drawY, drawX + kTileSize, drawY + kTileSize, GetColor(0, 0, 0), FALSE); // 枠
-            }
-        }
-    }
-}
-
-/*
-// --- 最適化されたタイル描画ロジック（コメント保持） ---
-void Stage::DrawOptimized(float cameraX, int screenWidth, int screenHeight) const
 {
     int startX = static_cast<int>(cameraX) / kTileSize;
     int endX = (static_cast<int>(cameraX) + screenWidth) / kTileSize + 1;
+    if (endX > kMapWidth) endX = kMapWidth;
+
     for (int y = 0; y < kMapHeight; y++) {
         for (int x = startX; x < endX; x++) {
-            if (x < 0 || x >= kMapWidth) continue;
-            if (mapData_[y][x] == 1) { ... }
+            int tileType = mapData_[y][x];
+            if (tileType <= 0) continue;
+
+            int drawX = x * kTileSize - static_cast<int>(cameraX);
+            int drawY = y * kTileSize;
+
+            // 1. チップ画像の描画（今の処理）
+            if (tileType < kMaxChips && chipHandles_[tileType] != -1) {
+                DrawExtendGraph(drawX, drawY, drawX + kTileSize, drawY + kTileSize, chipHandles_[tileType], TRUE);
+            }
+
+            // 2. ★追加：マップチップ番号の描画
+            // 黄色い文字で見やすく番号を表示します
+            DrawFormatString(drawX + 2, drawY + 2, GetColor(255, 255, 0), "%d", tileType);
         }
     }
+
+    // ゴール(GoalMan)の描画
+    if (goalTex_) {
+        const int goalDrawX = static_cast<int>(goalX_ - cameraX);
+        float groundY = GetGroundYAtX(goalX_);
+        if (groundY >= 2000.0f) groundY = 768.0f; // 地面がない時の保険
+
+        int handle = goalTex_->GetHandle();
+        int w, h; GetGraphSize(handle, &w, &h);
+        float scale = 0.3f;
+        int goalDrawY = static_cast<int>(groundY - (h * scale / 2.0f));
+        DrawRotaGraph(goalDrawX, goalDrawY, static_cast<double>(scale), 0.0, handle, TRUE);
+    }
 }
-*/
+
+/**
+ * ★当たり判定の「仕分け」設定
+ * 背景（通り抜けたいチップ）のIDをここで除外します
+ */
+bool Stage::IsSolid(int tileID) const {
+    // IDが 60以上 かつ 69以下 の場合だけ true（地面）を返す
+    if (tileID >= 60 && tileID <= 69) {
+        return true;
+    }
+
+    if (tileID >= 70 && tileID <= 79) return true;
+	if (tileID == 910) return true;
+    // それ以外（背景の487番や1264番など）はすべて false（通り抜け）
+    return false;
+}
 
 float Stage::GetGroundYAtX(float x) const
 {
-    // 1. 段差チェック
-    if (x >= stepStartX_ && x <= stepEndX_)   return stepTopY_;
-    if (x >= step2StartX_ && x <= step2EndX_) return step2TopY_;
-    if (x >= step3StartX_ && x <= step3EndX_) return step3TopY_;
+    int tx = static_cast<int>(x) / kTileSize;
+    if (tx < 0 || tx >= kMapWidth) return groundY_;
 
-    
-
+    for (int ty = 0; ty < kMapHeight; ty++) {
+        // IsSolidの結果がtrueの場所だけを地面とする
+        if (IsSolid(mapData_[ty][tx])) {
+            return static_cast<float>(ty * kTileSize);
+        }
+    }
     return groundY_;
 }
 
@@ -162,32 +142,37 @@ bool Stage::IsWall(float x, float y) const
     int tx = static_cast<int>(x) / kTileSize;
     int ty = static_cast<int>(y) / kTileSize;
     if (tx < 0 || tx >= kMapWidth || ty < 0 || ty >= kMapHeight) return false;
-    return (mapData_[ty][tx] == 1);
+    return IsSolid(mapData_[ty][tx]);
 }
 
 bool Stage::IsBlock(float x, float y) const
 {
-    int tx = static_cast<int>(x) / kTileSize;
-    int ty = static_cast<int>(y) / kTileSize;
-    if (tx < 0 || tx >= kMapWidth || ty < 0 || ty >= kMapHeight) return false;
-    return (mapData_[ty][tx] == 1);
+    return IsWall(x, y);
 }
 
-// --- シンプルなアクセッサ群 ---
-float Stage::GetGroundY() const { return groundY_; }
-float Stage::GetStepStartX() const { return stepStartX_; }
-float Stage::GetStepEndX() const { return stepEndX_; }
-float Stage::GetStepTopY() const { return stepTopY_; }
-float Stage::GetStep2StartX() const { return step2StartX_; }
-float Stage::GetStep2EndX() const { return step2EndX_; }
-float Stage::GetStep2TopY() const { return step2TopY_; }
-float Stage::GetStep3StartX() const { return step3StartX_; }
-float Stage::GetStep3EndX() const { return step3EndX_; }
-float Stage::GetStep3TopY() const { return step3TopY_; }
+void Stage::LoadMapCSV(const std::string& filePath)
+{
+    std::ifstream file(filePath);
+    if (!file.is_open()) return;
 
+    std::string line;
+    int y = 0;
+    while (std::getline(file, line) && y < kMapHeight) {
+        if (!line.empty() && line.back() == '\r') line.pop_back(); // 改行除去
+        std::stringstream ss(line);
+        std::string cell;
+        int x = 0;
+        while (std::getline(ss, cell, ',') && x < kMapWidth) {
+            if (!cell.empty()) {
+                try { mapData_[y][x] = std::stoi(cell); }
+                catch (...) { mapData_[y][x] = 0; }
+            }
+            x++;
+        }
+        y++;
+    }
+}
+
+float Stage::GetGroundY() const { return groundY_; }
 float Stage::GetGoalX() const { return goalX_; }
 float Stage::GetStageWidth() const { return stageWidth_; }
-float Stage::GetPuddleStartX() const { return puddleStartX_; }
-float Stage::GetPuddleEndX() const { return puddleEndX_; }
-float Stage::GetDirtyStartX() const { return dirtyStartX_; }
-float Stage::GetDirtyEndX() const { return dirtyEndX_; }

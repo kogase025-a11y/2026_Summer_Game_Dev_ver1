@@ -137,12 +137,15 @@
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
+    <ClCompile Include="Gimmick\GimmickRain.cpp" />
     <ClCompile Include="Gimmick\GimmickPuddle.cpp" />
+    <ClCompile Include="Gimmick\GimmickSplash.cpp" />
     <ClCompile Include="Gimmick\GimmickWaterDrop.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager\Input\InputManager.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Gimmick\RainManager.cpp" />
     <ClCompile Include="Scene\SceneClear.cpp" />
     <ClCompile Include="Scene\SceneGame.cpp" />
     <ClCompile Include="Scene\SceneGameOver.cpp" />
@@ -161,8 +164,10 @@
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="FPS\Fps.h" />
+    <ClInclude Include="Gimmick\GimmickRain.h" />
     <ClInclude Include="Gimmick\Fps.h" />
     <ClInclude Include="Gimmick\GimmickPuddle.h" />
+    <ClInclude Include="Gimmick\GimmickSplash.h" />
     <ClInclude Include="Gimmick\GimmickSuper.h" />
     <ClInclude Include="Gimmick\GimmickWaterDrop.h" />
     <ClInclude Include="Manager\BGMmanager.h" />
@@ -171,6 +176,7 @@
     <ClInclude Include="Manager\ResourceManager.h" />
     <ClInclude Include="Manager\SceneManager.h" />
     <ClInclude Include="Player\Player.h" />
+    <ClInclude Include="Gimmick\RainManager.h" />
     <ClInclude Include="Resource\FileSuper.h" />
     <ClInclude Include="Resource\ImageFile.h" />
     <ClInclude Include="Resource\SoundFile.h" />
@@ -227,6 +233,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="Data\stage1.csv" />
+    <None Include="Data\stage2.csv" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

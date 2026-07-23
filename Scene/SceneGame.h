@@ -48,4 +48,14 @@ private:
 
 	float itemX_, itemY_; // アイテムの座標
 	bool isItemExist_;    // アイテムがまだステージにあるか
+
+public:
+	// Stageの当たり判定をギミックなどに提供
+	bool CheckStageCollision(float x, float y) const;
+
+	// プレイヤーのHitBoxを取得
+	Rect GetPlayerHitBox() const;
+
+	// 雨に当たったときのゲームオーバー処理
+	void OnPlayerHitRain();
 };

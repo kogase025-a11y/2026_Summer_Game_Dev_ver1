@@ -39,7 +39,10 @@ bool Player::SystemInit() {
 // ゲーム開始時リセット
 void Player::GameInit() {
     positionX_ = 300.0f;
-    positionY_ = stage_->GetGroundY();
+
+    // 現在位置の地面の高さを取得してそこに立つ
+    positionY_ = stage_->GetGroundYAtX(positionX_);
+
     velocityX_ = 0.0f;
     velocityY_ = 0.0f;
     onGround_ = true;
@@ -60,10 +63,6 @@ void Player::Update() { /* 旧インターフェース(未使用) */ }
  * 毎フレームの更新メイン処理
  */
 void Player::Update(const InputManager& input) {
-
-
-   
-
     // 1. 入力による移動・ジャンプ
     ProcessMove(input);
     if (!onGround_) AddGravity();
@@ -80,36 +79,8 @@ void Player::Update(const InputManager& input) {
     Move();
     bool landedThisFrame = (!wasOnGround && onGround_); // このフレームで着地したか
 
-    // 5. 特殊地形判定
+    // 5. 特殊地形判定（水たまりなどのチェック）
     CheckTerrainCollision();
-
-    //// 6. 水たまりヒット時の処理
-    //if (isInPuddle_ && !wasInPuddle_) {
-    //    if (!isInvincible_) {
-    //        if (dirtLevel_ < 3) dirtLevel_++;
-    //        if (puddleSe_ && puddleSe_->GetHandle() != -1)
-    //            PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
-    //    }
-    //}
-
-    // (isInDiaty_ の方も同様に !isInvincible_ で囲む)
-    /*
-    // --- 着地音の検討メモ ---
-    else if (landedThisFrame)
-    {
-        if (fallSe_ && fallSe_->GetHandle() != -1)
-        {
-            PlaySoundMem(fallSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
-        }
-    }
-    */
-   /* wasInPuddle_ = isInPuddle_;*/
-
-    //// 7. 汚れ地面ヒット時の処理
-    //if (isInDirty_ && !wasInDirty_) {
-    //    if (dirtLevel_ < 3) dirtLevel_++;
-    //}
-    //wasInDirty_ = isInDirty_;
 
     // 8. 状態名の更新
     UpdateStateName(input);
@@ -117,38 +88,24 @@ void Player::Update(const InputManager& input) {
 
 /**
  * 水たまりや汚れ地面との接触判定
+ * （GimmickPuddleのOnTouchシステムと完全に連動するリファクタリング版）
  */
 void Player::CheckTerrainCollision() {
-   
-
-    // プレイヤーの「赤い枠」の左右の端を使う
-   /* Rect hb = GetHitBox();
-    const float playerLeft = hb.x;
-    const float playerRight = hb.x + hb.w;
-
-    const float puddleStart = stage_->GetPuddleStartX();
-    const float puddleEnd = stage_->GetPuddleEndX();*/
-
-    isInPuddle_ = false;
-    isInDirty_ = false;
-
-    // 赤い枠を取得
-    Rect hb = GetHitBox();
-
-    // 水たまり判定用の左右（あえて少しだけ内側を判定して「早すぎる」のを防ぐ）
-    const float checkMargin = 10.0f; // この数値を大きくすると、より中央まで行かないと反応しなくなる
-    const float checkLeft = hb.x + checkMargin;
-    const float checkRight = hb.x + hb.w - checkMargin;
-
-    const float puddleStart = stage_->GetPuddleStartX();
-    const float puddleEnd = stage_->GetPuddleEndX();
-
-    if (onGround_) {
-        // 水たまりとの重なり判定
-        if (checkRight >= puddleStart && checkLeft <= puddleEnd) {
-            isInPuddle_ = true;
+    // 【入った瞬間】の判定：前フレームは外で、今フレームが水たまり中のときにSEを鳴らす
+    if (isInPuddle_ && !wasInPuddle_) {
+        if (puddleSe_ && puddleSe_->GetHandle() != -1) {
+            PlaySoundMem(puddleSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
         }
     }
+
+    // 次のフレームの比較用に現在の状態を保存
+    wasInPuddle_ = isInPuddle_;
+
+    // 次のフレームの処理に向けて一旦リセット
+    // プレイヤーが水たまりの中に残っていれば、次のフレームのギミック更新ループ（GimmickPuddle::OnTouch）内で
+    // 再び player.SetInPuddle(true) が呼び出されて true に維持されます。
+    isInPuddle_ = false;
+    isInDirty_ = false; // 汚れ地面用のフラグも念のためリセット
 }
 
 /**
@@ -178,7 +135,7 @@ void Player::UpdateStateName(const InputManager& input) {
 void Player::Draw() { Draw(0.0f, -1); }
 
 /**
- * 描画処理：汚れレベルに応じた画像選択と、中心点調整
+ * 描画処理
  */
 void Player::Draw(float cameraX, int playerGraphHandle) const {
     if (isInvincible_ && (GetNowCount() / 100) % 2 == 0) return;
@@ -186,10 +143,8 @@ void Player::Draw(float cameraX, int playerGraphHandle) const {
     const int drawX = static_cast<int>(positionX_ - cameraX);
     const int drawY = static_cast<int>(positionY_);
 
-    // 画像の中心を計算（赤い枠の中央に画像を配置する）
     const int imageCenterY = drawY - static_cast<int>(HIT_H / 2.0f) + static_cast<int>(OFFSET_Y);
 
-    // 画像描画
     if (dirtLevel_ > 0) {
         DrawRotaGraph(drawX, imageCenterY, 1.0, angle_, wetTexs[dirtLevel_ - 1]->GetHandle(), TRUE);
     }
@@ -209,51 +164,69 @@ void Player::Draw(float cameraX, int playerGraphHandle) const {
 }
 
 /**
- * 物理移動と詳細な衝突判定
+ * 物理移動と詳細な衝突判定（マップチップ対応完全版）
  */
 void Player::Move(void) {
-    /*
-    // --- 旧ロジック（ブロック単位の判定検討時のもの） ---
-    const float halfW = 20.0f;
-    const float prevX_ = positionX_;
-    positionX_ += velocityX_;
-    if (stage_->IsBlock(positionX_ + halfW, positionY_ - 5.0f) ||
-        stage_->IsBlock(positionX_ + halfW, positionY_ - 60.0f) ||
-        stage_->IsBlock(positionX_ - halfW, positionY_ - 5.0f) ||
-        stage_->IsBlock(positionX_ - halfW, positionY_ - 60.0f))
-    {
-        positionX_ = prevX_;
-        velocityX_ = 0.0f;
-    }
-    ...
-    */
-
-    const float playerHalfWidth = HIT_W / 2.0f; // 左右の判定半径
+    const float playerHalfWidth = HIT_W / 2.0f;
     const float prevX = positionX_;
 
-    // 1. 横移動
+    // -------------------------------------------------------------------------
+    // 1. 横移動と壁判定（マップチップ配列から直接押し戻す汎用ロジック）
+    // -------------------------------------------------------------------------
     positionX_ += velocityX_;
 
-    // 2. ステージ端の判定
+    // ステージ端の制限
     const float stageW = (std::max)(0.0f, stage_->GetStageWidth());
     if (positionX_ < playerHalfWidth) { positionX_ = playerHalfWidth; velocityX_ = 0.0f; }
     if (positionX_ > stageW - playerHalfWidth) { positionX_ = stageW - playerHalfWidth; velocityX_ = 0.0f; }
 
-    // 3. 段差（壁）の衝突判定
+    // マップチップ配列（IsWall）を使用した横方向の壁押し戻し処理
+    // プレイヤーの「頭・中央・足元」の3つの高さで左右の壁判定を行う
+    float checkYTop = positionY_ - HIT_H + 5.0f;
+    float checkYMid = positionY_ - (HIT_H / 2.0f);
+    float checkYBottom = positionY_ - 5.0f;
+
+    if (velocityX_ > 0.0f) { // 右移動時：右側が壁にめり込んでいるかチェック
+        float rightX = positionX_ + playerHalfWidth;
+        if (stage_->IsWall(rightX, checkYTop) || stage_->IsWall(rightX, checkYMid) || stage_->IsWall(rightX, checkYBottom)) {
+            // めり込む前の元のマスの境界（64の倍数）に押し戻す
+            positionX_ = static_cast<float>((static_cast<int>(rightX) / 64) * 64) - playerHalfWidth - 0.1f;
+            velocityX_ = 0.0f;
+        }
+    }
+    else if (velocityX_ < 0.0f) { // 左移動時：左側が壁にめり込んでいるかチェック
+        float leftX = positionX_ - playerHalfWidth;
+        if (stage_->IsWall(leftX, checkYTop) || stage_->IsWall(leftX, checkYMid) || stage_->IsWall(leftX, checkYBottom)) {
+            // めり込んだ壁の右端（次のマスの開始位置）に押し戻す
+            positionX_ = static_cast<float>((static_cast<int>(leftX) / 64) * 64 + 64) + playerHalfWidth + 0.1f;
+            velocityX_ = 0.0f;
+        }
+    }
+
+    // 【レガシーコード退避】旧段差判定（アクセッサ消去のためビルドエラー回避のためコメントアウト）
+    /*
     CheckStepCollision(stage_->GetStepStartX(), stage_->GetStepEndX(), stage_->GetStepTopY(), playerHalfWidth, prevX);
     CheckStepCollision(stage_->GetStep2StartX(), stage_->GetStep2EndX(), stage_->GetStep2TopY(), playerHalfWidth, prevX);
     CheckStepCollision(stage_->GetStep3StartX(), stage_->GetStep3EndX(), stage_->GetStep3TopY(), playerHalfWidth, prevX);
+    */
 
-    // 4. 足元の地面判定 (3点チェックで安定させる)
+    // -------------------------------------------------------------------------
+    // 2. 縦移動と足元の地面判定
+    // -------------------------------------------------------------------------
+    // 3点チェックで足元の床（一番高い位置）を特定
     const float sYMid = stage_->GetGroundYAtX(positionX_);
     const float sYL = stage_->GetGroundYAtX(positionX_ - playerHalfWidth + 1.0f);
     const float sYR = stage_->GetGroundYAtX(positionX_ + playerHalfWidth - 1.0f);
     const float supportGroundY = (std::min)({ sYMid, sYL, sYR });
 
-    if (onGround_ && (positionY_ < supportGroundY - 0.5f)) onGround_ = false;
+    // 崖から落ちる処理：足元に地面がなくなったら落下状態へ
+    if (onGround_ && (positionY_ < supportGroundY - 0.5f)) {
+        onGround_ = false;
+    }
 
-    // 5. 縦移動
     positionY_ += velocityY_;
+
+    // 着地判定
     if (positionY_ >= supportGroundY) {
         positionY_ = supportGroundY;
         velocityY_ = 0.0f;
@@ -262,10 +235,11 @@ void Player::Move(void) {
 }
 
 /**
- * 段差衝突の共通ロジック：横からの押し戻し
+ * 段差衝突の共通ロジック
+ * ※マップチップ化により汎用壁判定に一本化したため、現在は未使用ですが一応残しています。
  */
 void Player::CheckStepCollision(float sStart, float sEnd, float sTop, float pHalf, float prevX) {
-    if (positionY_ > sTop + 0.5f) { // 段差より下にいる場合のみ衝突
+    if (positionY_ > sTop + 0.5f) {
         if (positionX_ + pHalf > sStart && positionX_ - pHalf < sEnd) {
             if (prevX + pHalf <= sStart)      positionX_ = sStart - pHalf;
             else if (prevX - pHalf >= sEnd)   positionX_ = sEnd + pHalf;
@@ -306,7 +280,7 @@ void Player::Decelerate(float speed) {
 void Player::AddGravity() { velocityY_ += GRAVITY; }
 
 /**
- * ジャンプ入力：押し続けると高く飛ぶマリオ風ジャンプ
+ * ジャンプ入力
  */
 void Player::ProcessJump(const InputManager& input) {
     const bool trg = input.IsTrgDown(KEY_INPUT_SPACE) || input.IsPadBtnTrgDown(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN);
@@ -319,11 +293,11 @@ void Player::ProcessJump(const InputManager& input) {
         if (jumpSe_ && jumpSe_->GetHandle() != -1) PlaySoundMem(jumpSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
     }
     else if (!onGround_) {
-        if (hold && jumpTimer_ > 0) { // 押し続けて上昇維持
+        if (hold && jumpTimer_ > 0) {
             jumpTimer_--;
             Jump();
         }
-        else if (!hold && velocityY_ < 0.0f) { // 離したら上昇力カット
+        else if (!hold && velocityY_ < 0.0f) {
             jumpTimer_ = 0;
             velocityY_ *= 0.5f;
         }
@@ -333,14 +307,14 @@ void Player::ProcessJump(const InputManager& input) {
     }
 }
 
-
 void Player::Jump() { SetJumpPow(MAX_JUMP_POW); }
-void Player::SetJumpPow(float pow) { velocityY_ = -pow; 
-}
+void Player::SetJumpPow(float pow) { velocityY_ = -pow; }
+
 void Player::PlayGoalSound() {
     if (goalSe_ && goalSe_->GetHandle() != -1) PlaySoundMem(goalSe_->GetHandle(), DX_PLAYTYPE_BACK, TRUE);
 }
-void Player::StartInvincible(float sec) 
+
+void Player::StartInvincible(float sec)
 {
     invincibleTimer_ = sec;
     isInvincible_ = true;
@@ -349,4 +323,3 @@ void Player::StartInvincible(float sec)
 const char* Player::GetStateName() const { return stateName_; }
 float Player::GetX() const { return positionX_; }
 float Player::GetY() const { return positionY_; }
-   

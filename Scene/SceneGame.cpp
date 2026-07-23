@@ -9,43 +9,54 @@
 #include"../Manager/SceneManager.h"
 #include "../Gimmick/GimmickPuddle.h"
 #include "../Gimmick/GimmickWaterDrop.h" 
-
-
+#include "../Gimmick/GimmickSplash.h"
+#include "../Gimmick/GimmickRain.h"
 
 #include <algorithm>
 
 SceneGame::SceneGame(FileManager& fileMng, SceneManager* sceneMng)
-	: player_(&stage_,fileMng), fileMng_(fileMng), sceneMng_(sceneMng)
+	: player_(&stage_, fileMng), fileMng_(fileMng), sceneMng_(sceneMng)
 {
-	
-
-	// --- ギミック用の画像をロード ---
-	auto waterTex = fileMng_.LoadImageFM("Image/Water.PNG"); // パスは適宜合わせてください
-	// 水たまりを追加
-	gimmicks_.push_back(std::make_shared<GimmickPuddle>(800.0f, 1200.0f, 760.0f));
-
-	// 水滴を追加
-	gimmicks_.push_back(std::make_shared<GimmickWater>(1500.0f, 200.0f, 760.0f, 2.0f, waterTex));
 
 
-	// ★【追加】シーンマネージャーから、さっき保存したステージ番号（1?3）を受け取る
 	int stageNum = sceneMng_->GetStageNum();
+	auto waterTex = fileMng_.LoadImageFM("Image/Water.PNG");
 
-	// ★【追加】ステージ番号に応じて、ステージの地形データを切り替える（Init関数は後で作ります）
+	// 地面の高さ定数 (12マス目 * 64px = 768px)
+	const float floorY = 768.0f;
+
+	// --- ステージ番号ごとのギミック配置 ---
+	if (stageNum == 1) {
+		// 地面(floorY)の上に重なるようにギミックを配置
+		gimmicks_.push_back(std::make_shared<GimmickPuddle>(800.0f, 1200.0f, floorY));
+		gimmicks_.push_back(std::make_shared<GimmickWater>(1500.0f, 200.0f, floorY, 2.0f, waterTex));
+		gimmicks_.push_back(std::make_shared<GimmickSplash>(900.0f, floorY - 50.0f, 100.0f, 50.0f));
+
+		// 追加：雨を降らせるテスト（X:0～3000、Y:0から開始、幅3000、高さ1000の範囲で雨を降らせます）
+		gimmicks_.push_back(std::make_shared<GimmickRain>(0.0f, 0.0f, 3000, 1000, this));
+	}
+	else if (stageNum == 2) {
+		gimmicks_.push_back(std::make_shared<GimmickPuddle>(1000.0f, 1500.0f, floorY));
+		gimmicks_.push_back(std::make_shared<GimmickSplash>(1200.0f, floorY - 50.0f, 100.0f, 50.0f));
+	}
+	else if (stageNum == 3) {
+		gimmicks_.push_back(std::make_shared<GimmickWater>(800.0f, 200.0f, floorY, 1.5f, waterTex));
+		gimmicks_.push_back(std::make_shared<GimmickWater>(1200.0f, 200.0f, floorY, 2.5f, waterTex));
+	}
+
 	stage_.Init(stageNum, fileMng);
 
 	player_.SystemInit();
-	player_.GameInit();
-
-	
+	player_.GameInit(); // 初期Y座標は内部で 768.0f に設定されます
 
 	// --- アイテムの初期化 ---
 	isItemExist_ = false;
 	if (stageNum == 1 || stageNum == 2) {
 		isItemExist_ = true;
-		itemX_ = 700.0f; // とりあえず X=800 の位置に配置
-		itemY_ = stage_.GetGroundY() - 50.0f; // 地面から少し浮かす
+		itemX_ = 700.0f;
+		itemY_ = floorY - 50.0f; // 地面から少し浮かす
 	}
+
 
 	// ★追加：ステージ3開始時にアイテムチェック
 	if (stageNum == 3) {
@@ -168,9 +179,26 @@ void SceneGame::Update()
 	}
 
 	// --- 3. ゴールとの当たり判定 ---
-	// ★修正：ここも player_.GetHitBox() に変更
 	const Rect playerHitForGoal = player_.GetHitBox();
-	const Rect goalRect{ stage_.GetGoalX() - 30.0f, stage_.GetGroundY() - 200.0f, 60.0f, 200.0f };
+
+	// ★修正：GetGroundY() [2000px] ではなく、
+	// ゴールの場所にある「本当の地面の高さ」を取得します。
+	float goalGroundY = stage_.GetGroundYAtX(stage_.GetGoalX());
+
+	// 地面が見つからない場合の保険（念のため）
+	if (goalGroundY >= 2000.0f) goalGroundY = 768.0f;
+
+	// 当たり判定の箱(Rect)を地面の上に作成
+	// x: ゴールの中心から少し左
+	// y: 地面(goalGroundY)から上に 300px 分
+	// w: 横幅 100px
+	// h: 縦幅 300px
+	const Rect goalRect{
+		stage_.GetGoalX() - 50.0f,
+		goalGroundY - 300.0f,
+		100.0f,
+		300.0f
+	};
 
 	if (playerHitForGoal.IsHit(goalRect) && !isGoal_)
 	{
@@ -178,6 +206,16 @@ void SceneGame::Update()
 		goalTimer_ = 0;
 		player_.PlayGoalSound();
 	}
+
+	// 【デバッグ：当たり判定を見えるようにする】
+	// ゴール付近に「赤い枠」が表示されます。これに触れればクリアです。
+	DrawBox(
+		static_cast<int>(goalRect.x - cameraX_),
+		static_cast<int>(goalRect.y),
+		static_cast<int>(goalRect.x + goalRect.w - cameraX_),
+		static_cast<int>(goalRect.y + goalRect.h),
+		GetColor(255, 0, 0), FALSE
+	);
 
 	
 	if (isGoal_)
@@ -262,4 +300,24 @@ void SceneGame::Draw()
 		DrawString(kScreenWidth / 2 - 120, 560, (pauseCursor_ == 2 ? "> TO TITLE" : "  TO TITLE"), color2);
 		DrawString(kScreenWidth / 2 - 120, 600, (pauseCursor_ == 3 ? "> QUIT GAME" : "  QUIT GAME"), color3);
 	}
+}
+
+bool SceneGame::CheckStageCollision(float x, float y) const {
+	// ステージの壁などに当たっているか（雨用の判定）
+	if (stage_.IsWall(x, y)) {
+		return true;
+	}
+	if (stage_.IsBlock(x, y)) {
+		return true;
+	}
+	return false;
+}
+
+Rect SceneGame::GetPlayerHitBox() const {
+	return player_.GetHitBox();
+}
+
+void SceneGame::OnPlayerHitRain() {
+	// 雨に当たったらゲームオーバーにする
+	EndScene(SceneID::GAMEOVER);
 }

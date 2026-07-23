@@ -29,6 +29,9 @@
     <ClCompile Include="Gimmick\GimmickPuddle.cpp" />
     <ClCompile Include="Gimmick\GimmickWaterDrop.cpp" />
     <ClCompile Include="FPS\Fps.cpp" />
+    <ClCompile Include="Gimmick\GimmickSplash.cpp" />
+    <ClCompile Include="Gimmick\GimmickRain.cpp" />
+    <ClCompile Include="Gimmick\RainManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h">
@@ -130,6 +133,18 @@
     <ClInclude Include="Util\Vector2F.h">
       <Filter>w b _ [  t %40 C</Filter>
     </ClInclude>
+    <ClInclude Include="Gimmick\Fps.h">
+      <Filter>w b _ [  t %40 C</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\GimmickSplash.h">
+      <Filter>w b _ [  t %40 C</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\RainManager.h">
+      <Filter>w b _ [  t %40 C</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\GimmickRain.h">
+      <Filter>w b _ [  t %40 C</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Image\GameClear.PNG" />
@@ -165,6 +180,8 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+    <None Include="Data\stage1.csv" />
+    <None Include="Data\stage2.csv" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Log.txt" />
